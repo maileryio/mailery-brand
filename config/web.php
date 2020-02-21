@@ -22,7 +22,7 @@ return [
                     'label' => function () {
                         return 'Brands';
                     },
-                    'icon' => 'brands',
+                    'icon' => 'brand',
                     'url' => function (ContainerInterface $container) {
                         return $container->get(UrlGeneratorInterface::class)
                             ->generate('/brand/default/index');
