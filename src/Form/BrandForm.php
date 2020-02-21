@@ -100,6 +100,8 @@ class BrandForm extends Form
                     'min' => 4,
                 ]))
                 ->addConstraint($nameConstraint),
+
+            '' => F::submit($this->user === null ? 'Create' : 'Update'),
         ];
     }
 

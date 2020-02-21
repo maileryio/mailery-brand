@@ -68,16 +68,6 @@ $this->setTitle('All Brands');
                         ->content(function (Brand $data, int $index) {
                             return $data->getName();
                         }),
-                    (new DataColumn())
-                        ->header('Email')
-                        ->content(function (Brand $data, int $index) {
-                            return $data->getEmail();
-                        }),
-                    (new DataColumn())
-                        ->header('Status')
-                        ->content(function (Brand $data, int $index) {
-                            return $data->getStatus();
-                        }),
                     (new ActionColumn())
                         ->header('Actions')
                         ->view(function (Brand $data, int $index) use($urlGenerator) {

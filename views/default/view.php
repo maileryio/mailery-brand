@@ -53,21 +53,9 @@ $this->setTitle($brand->getName());
             ])
             ->attributes([
                 [
-                    'label' => 'Email',
-                    'value' => function (Brand $data, $index) {
-                        return $data->getEmail();
-                    },
-                ],
-                [
                     'label' => 'Brand name',
                     'value' => function (Brand $data, $index) {
                         return $data->getName();
-                    },
-                ],
-                [
-                    'label' => 'Status',
-                    'value' => function (Brand $data, $index) {
-                        return $data->getStatus();
                     },
                 ],
             ]);
