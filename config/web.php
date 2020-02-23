@@ -10,25 +10,26 @@ declare(strict_types=1);
  * @copyright Copyright (c) 2020, Mailery (https://mailery.io/)
  */
 
-use Mailery\Menu\Sidebar\SidebarMenuInterface;
+use Mailery\Brand\Middleware\BrandRequiredMiddleware;
+use Mailery\Brand\Service\BrandLocator;
+use Cycle\ORM\ORMInterface;
 use Psr\Container\ContainerInterface;
+use Psr\Http\Message\ResponseFactoryInterface;
 use Yiisoft\Router\UrlGeneratorInterface;
 
 return [
-    SidebarMenuInterface::class => [
-        'setItems()' => [
-            'items' => [
-                'brands' => [
-                    'label' => function () {
-                        return 'Brands';
-                    },
-                    'icon' => 'brand',
-                    'url' => function (ContainerInterface $container) {
-                        return $container->get(UrlGeneratorInterface::class)
-                            ->generate('/brand/default/index');
-                    },
-                ],
-            ],
-        ],
-    ],
+    BrandLocator::class => function (ContainerInterface $container) {
+        $orm = $container->get(ORMInterface::class);
+
+        return (new BrandLocator($orm))
+            ->withRegexp('/^\/brand\/(\d+)\/?/');
+    },
+    BrandRequiredMiddleware::class => function (ContainerInterface $container) {
+        $responseFactory = $container->get(ResponseFactoryInterface::class);
+        $urlGenerator = $container->get(UrlGeneratorInterface::class);
+        $brandLocator = $container->get(BrandLocator::class);
+
+        return (new BrandRequiredMiddleware($responseFactory, $urlGenerator, $brandLocator))
+            ->toRoute('/brand/default/index');
+    },
 ];

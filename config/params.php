@@ -11,7 +11,11 @@ declare(strict_types=1);
  */
 
 use Mailery\Brand\Controller\DefaultController;
+use Mailery\Brand\Middleware\BrandRequiredMiddleware;
+use Mailery\Menu\MenuItem;
+use Opis\Closure\SerializableClosure;
 use Yiisoft\Router\Route;
+use Yiisoft\Router\UrlGeneratorInterface;
 
 return [
     'cycle.common' => [
@@ -38,6 +42,34 @@ return [
                 ->name('/brand/default/edit'),
             Route::delete('/brand/default/delete/{id:\d+}', [DefaultController::class, 'delete'])
                 ->name('/brand/default/delete'),
+        ],
+    ],
+
+    'menu' => [
+        'navbar' => [
+            'items' => [
+                'brands' => (new MenuItem())
+                    ->withLabel('My brands')
+                    ->withUrl(new SerializableClosure(function (UrlGeneratorInterface $urlGenerator) {
+                        return $urlGenerator->generate('/brand/default/index');
+                    })),
+            ],
+        ],
+        'sidebar' => [
+            'items' => [
+                'brands' => (new MenuItem())
+                    ->withLabel('Brands')
+                    ->withIcon('brand')
+                    ->withUrl(new SerializableClosure(function (UrlGeneratorInterface $urlGenerator) {
+                        return $urlGenerator->generate('/brand/default/index');
+                    })),
+            ],
+        ],
+    ],
+
+    'dispatcher' => [
+        'middlewares' => [
+            BrandRequiredMiddleware::class,
         ],
     ],
 ];

@@ -70,6 +70,9 @@ $this->setTitle('All Brands');
                         }),
                     (new ActionColumn())
                         ->header('Actions')
+                        ->contentOptions([
+                            'style' => 'width: 120px;',
+                        ])
                         ->view(function (Brand $data, int $index) use($urlGenerator) {
                             return Html::a(
                                 Icon::widget()->name('eye'),
