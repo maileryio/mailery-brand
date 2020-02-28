@@ -16,7 +16,7 @@ use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Table;
 use Cycle\Annotated\Annotation\Table\Index;
-use Yiisoft\Auth\IdentityInterface;
+use Mailery\Brand\Service\BrandInterface;
 
 /**
  * @Entity(
@@ -30,7 +30,7 @@ use Yiisoft\Auth\IdentityInterface;
  *      }
  * )
  */
-class Brand implements IdentityInterface
+class Brand implements BrandInterface
 {
     const STATUS_ACTIVE = 'active';
     const STATUS_DISABLED = 'disabled';
@@ -48,6 +48,18 @@ class Brand implements IdentityInterface
      * @var string
      */
     private $name;
+
+    /**
+     * @Column(type = "text")
+     * @var string
+     */
+    private $description;
+
+    /**
+     * @Column(type = "int", default="0")
+     * @var string
+     */
+    private $totalSubscribers;
 
     /**
      * @return string|null
@@ -82,6 +94,42 @@ class Brand implements IdentityInterface
     public function setName(string $name): self
     {
         $this->name = $name;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDescription(): string
+    {
+        return $this->description;
+    }
+
+    /**
+     * @param string $description
+     * @return self
+     */
+    public function setDescription(string $description): self
+    {
+        $this->description = $description;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTotalSubscribers(): int
+    {
+        return $this->totalSubscribers;
+    }
+
+    /**
+     * @param int $totalSubscribers
+     * @return self
+     */
+    public function setTotalSubscribers(int $totalSubscribers): self
+    {
+        $this->totalSubscribers = $totalSubscribers;
         return $this;
     }
 

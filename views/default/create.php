@@ -23,7 +23,7 @@ $this->setTitle('New Brand');
 </div>
 <div class="mb-2"></div>
 <div class="row">
-    <div class="col-6">
+    <div class="col-12">
         <?= (new FormRenderer())($brandForm, $submitted) ?>
     </div>
 </div>

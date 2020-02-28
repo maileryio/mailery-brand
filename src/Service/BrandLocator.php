@@ -15,9 +15,9 @@ class BrandLocator
     private ?string $regexp = null;
 
     /**
-     * @var Brand|null
+     * @var BrandInterface|null
      */
-    private ?Brand $brand = null;
+    private ?BrandInterface $brand = null;
 
     /**
      * @var ORMInterface
@@ -44,11 +44,19 @@ class BrandLocator
     }
 
     /**
-     * @return Brand
+     * @return bool
      */
-    public function getBrand(): Brand
+    public function hasBrand(): bool
     {
-        if ($this->brand === null) {
+        return $this->brand !== null;
+    }
+
+    /**
+     * @return BrandInterface
+     */
+    public function getBrand(): BrandInterface
+    {
+        if (!$this->hasBrand()) {
             throw new BrandRequiredException();
         }
         return $this->brand;
@@ -66,8 +74,8 @@ class BrandLocator
         $brandId = null;
         $brandRepo = $this->orm->getRepository(Brand::class);
 
-        if (preg_match($this->regexp, $path, $matches)) {
-            $brandId = (int) $matches[1];
+        if (preg_match($this->regexp, $path, $matches) && !empty($matches['brandId'])) {
+            $brandId = (int) $matches['brandId'];
         }
 
         if ($brandId !== null) {

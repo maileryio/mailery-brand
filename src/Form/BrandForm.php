@@ -44,6 +44,7 @@ class BrandForm extends Form
         $this->offsetSet('', F::submit('Update'));
 
         $this['name']->setValue($brand->getName());
+        $this['description']->setValue($brand->getDescription());
 
         return $this;
     }
@@ -54,6 +55,7 @@ class BrandForm extends Form
     public function save(): Brand
     {
         $name = $this['name']->getValue();
+        $description = $this['description']->getValue();
 
         if (($brand = $this->brand) === null) {
             $brand = new Brand();
@@ -61,6 +63,7 @@ class BrandForm extends Form
 
         $brand
             ->setName($name)
+            ->setDescription($description)
         ;
 
         $tr = new Transaction($this->orm);
@@ -94,12 +97,15 @@ class BrandForm extends Form
         ]);
 
         return [
-            'name' => F::text('Brand name')
+            'name' => F::text('Brand name', ['minlength' => 4, 'maxlength' => 32])
                 ->addConstraint(new Constraints\NotBlank())
                 ->addConstraint(new Constraints\Length([
                     'min' => 4,
+                    'max' => 32,
                 ]))
                 ->addConstraint($nameConstraint),
+            'description' => F::textarea('Description')
+                ->addConstraint(new Constraints\NotBlank()),
 
             '' => F::submit($this->user === null ? 'Create' : 'Update'),
         ];

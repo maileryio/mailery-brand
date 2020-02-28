@@ -30,22 +30,19 @@ class DefaultController extends Controller
     private const PAGINATION_INDEX = 5;
 
     /**
-     * @param Request $request
      * @param ORMInterface $orm
      * @return Response
      */
-    public function index(Request $request, ORMInterface $orm): Response
+    public function index(ORMInterface $orm): Response
     {
-        $pageNum = (int) $request->getAttribute('page', 1);
         /** @var BrandRepository $brandRepo */
         $brandRepo = $orm->getRepository(Brand::class);
 
-        $dataReader = $brandRepo->findAll()->withSort((new Sort([]))->withOrderString('name'));
-        $paginator = (new OffsetPaginator($dataReader))
-            ->withPageSize(self::PAGINATION_INDEX)
-            ->withCurrentPage($pageNum);
+        $dataReader = $brandRepo
+            ->findAll()
+            ->withSort((new Sort([]))->withOrderString('name'));
 
-        return $this->render('index', compact('paginator'));
+        return $this->render('index', compact('dataReader'));
     }
 
     /**
@@ -86,7 +83,7 @@ class DefaultController extends Controller
             $brandForm->loadFromServerRequest($request);
 
             if ($brandForm->isValid() && ($brand = $brandForm->save()) !== null) {
-                return $this->redirect($urlGenerator->generate('/brand/default/view', ['id' => $brand->getId()]));
+                return $this->redirect($urlGenerator->generate('/brand/default/index'));
             }
         }
 
@@ -124,7 +121,7 @@ class DefaultController extends Controller
             $brandForm->loadFromServerRequest($request);
 
             if ($brandForm->isValid() && ($brand = $brandForm->save()) !== null) {
-                return $this->redirect($urlGenerator->generate('/brand/default/view', ['id' => $brand->getId()]));
+                return $this->redirect($urlGenerator->generate('/brand/default/index'));
             }
         }
 

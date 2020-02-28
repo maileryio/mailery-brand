@@ -22,7 +22,7 @@ return [
         $orm = $container->get(ORMInterface::class);
 
         return (new BrandLocator($orm))
-            ->withRegexp('/^\/brand\/(\d+)\/?/');
+            ->withRegexp('/^\/brand\/(?<brandId>\d+)\/?/');
     },
     BrandRequiredMiddleware::class => function (ContainerInterface $container) {
         $responseFactory = $container->get(ResponseFactoryInterface::class);

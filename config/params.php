@@ -11,6 +11,7 @@ declare(strict_types=1);
  */
 
 use Mailery\Brand\Controller\DefaultController;
+use Mailery\Brand\Service\BrandLocator;
 use Mailery\Brand\Middleware\BrandRequiredMiddleware;
 use Mailery\Menu\MenuItem;
 use Opis\Closure\SerializableClosure;
@@ -32,15 +33,13 @@ return [
 
     'router' => [
         'routes' => [
-            Route::get('/brand/default/index', [DefaultController::class, 'index'])
+            Route::get('/brands', [DefaultController::class, 'index'])
                 ->name('/brand/default/index'),
-            Route::get('/brand/default/view/{id:\d+}', [DefaultController::class, 'view'])
-                ->name('/brand/default/view'),
-            Route::methods(['GET', 'POST'], '/brand/default/create', [DefaultController::class, 'create'])
+            Route::methods(['GET', 'POST'], '/brand/new-brand', [DefaultController::class, 'create'])
                 ->name('/brand/default/create'),
-            Route::methods(['GET', 'POST'], '/brand/default/edit/{id:\d+}', [DefaultController::class, 'edit'])
+            Route::methods(['GET', 'POST'], '/brand/{id:\d+}/edit', [DefaultController::class, 'edit'])
                 ->name('/brand/default/edit'),
-            Route::delete('/brand/default/delete/{id:\d+}', [DefaultController::class, 'delete'])
+            Route::delete('/brand/{id:\d+}/delete', [DefaultController::class, 'delete'])
                 ->name('/brand/default/delete'),
         ],
     ],
@@ -57,11 +56,11 @@ return [
         ],
         'sidebar' => [
             'items' => [
-                'brands' => (new MenuItem())
-                    ->withLabel('Brands')
-                    ->withIcon('brand')
-                    ->withUrl(new SerializableClosure(function (UrlGeneratorInterface $urlGenerator) {
-                        return $urlGenerator->generate('/brand/default/index');
+                'dashboard' => (new MenuItem())
+                    ->withLabel('Dashboard')
+                    ->withIcon('dashboard')
+                    ->withUrl(new SerializableClosure(function (UrlGeneratorInterface $urlGenerator, BrandLocator $brandLocator) {
+                        return $urlGenerator->generate('/', ['brandId' => $brandLocator->getBrand()->getId()]);
                     })),
             ],
         ],
