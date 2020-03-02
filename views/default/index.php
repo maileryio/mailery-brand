@@ -32,31 +32,53 @@ $this->setTitle('My Brands');
     </div><?php
     foreach ($dataReader->read() as $brand) {
         /* @var $brand Brand */
+        $editUrl = $urlGenerator->generate('/brand/default/edit', ['id' => $brand->getId()]);
+        $dashboardUrl = $urlGenerator->generate('/dashboard/default/index', ['brandId' => $brand->getId()]);
         ?><div class="col-md-6 col-lg-4">
-            <div class="card mb-4 shadow-sm" style="height: 180px;">
-                <div class="card-body h-50 position-relative">
-                    <h5 class="card-title d-flex">
-                        <?php $title = $translator->translate('{totalCount, number} {totalCount, plural, one{subscriber} other{subscribers}}', ['totalCount' => $brand->getTotalSubscribers()]); ?>
-                        <a href="<?= $urlGenerator->generate('/dashboard/default/index', ['brandId' => $brand->getId()]) ?>" title="<?= $title ?>" class="text-decoration-none text-truncate text-body stretched-link">
-                            <?= $brand->getName() ?>
-                        </a>
-                        <span class="badge badge-primary ml-2"><?= $brand->getTotalSubscribers() ?></span>
-                    </h5>
-                    <p class="card-text text-muted text-truncate" title="<?= $brand->getDescription() . $brand->getDescription() . $brand->getDescription() ?>">
-                        <?= $brand->getDescription() . $brand->getDescription() . $brand->getDescription() ?>
-                    </p>
+            <ui-brand-card>
+                <template v-slot:dropdown-button-content>
+                    <?= Icon::widget()->name('chevron-down')->options(['class' => 'text-body h4']);?>
+                </template>
+                <template v-slot:dropdown-button-items>
+                    <b-dropdown-item href="<?= $editUrl; ?>">Edit</b-dropdown-item>
+                    <b-dropdown-item href="<?= $dashboardUrl; ?>">Dashboard</b-dropdown-item>
+                    <b-dropdown-divider></b-dropdown-divider>
+                    <b-dropdown-text variant="danger" class="dropdown-item-custom-link"><?= Link::widget()
+                        ->label('Delete brand')
+                        ->method('delete')
+                        ->href($urlGenerator->generate('/brand/default/delete', ['id' => $brand->getId()]))
+                        ->confirm('Are you sure?')
+                        ->options([
+                            'class' => 'btn btn-link text-decoration-none text-danger',
+                        ]);
+                    ?></b-dropdown-text>
+                </template>
+
+                <div class="card mb-4 shadow-sm" style="height: 180px;">
+                    <div class="card-body h-50 position-relative">
+                        <h5 class="card-title d-flex">
+                            <?php $title = $translator->translate('{totalCount, number} {totalCount, plural, one{subscriber} other{subscribers}}', ['totalCount' => $brand->getTotalSubscribers()]); ?>
+                            <a href="<?= $dashboardUrl; ?>" title="<?= $title ?>" class="text-decoration-none text-truncate text-body stretched-link">
+                                <?= $brand->getName() ?>
+                            </a>
+                            <span class="badge badge-primary ml-2 mr-2"><?= $brand->getTotalSubscribers() ?></span>
+                        </h5>
+                        <p class="card-text text-muted text-truncate" title="<?= $brand->getDescription() . $brand->getDescription() . $brand->getDescription() ?>">
+                            <?= $brand->getDescription() . $brand->getDescription() . $brand->getDescription() ?>
+                        </p>
+                    </div>
+                    <div class="card-body h-50 bg-light border-top">
+                        <ul class="list-unstyled">
+                            <li>
+                                <?= Icon::widget()->name('check-circle')->options(['class' => 'text-success']); ?> Email messaging
+                            </li>
+                            <li>
+                                <?= Icon::widget()->name('check-circle')->options(['class' => 'text-success']); ?> Web push notifications
+                            </li>
+                        </ul>
+                    </div>
                 </div>
-                <div class="card-body h-50 bg-light border-top">
-                    <ul class="list-unstyled">
-                        <li>
-                            <?= Icon::widget()->name('check-circle')->options(['class' => 'text-success']); ?> Email messaging
-                        </li>
-                        <li>
-                            <?= Icon::widget()->name('check-circle')->options(['class' => 'text-success']); ?> Web push notifications
-                        </li>
-                    </ul>
-                </div>
-            </div>
+            </ui-brand-card>
         </div><?php
     }
 ?></div>

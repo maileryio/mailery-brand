@@ -14,11 +14,23 @@ use Mailery\Brand\Controller\DefaultController;
 use Mailery\Brand\Service\BrandLocator;
 use Mailery\Brand\Middleware\BrandRequiredMiddleware;
 use Mailery\Menu\MenuItem;
+use Mailery\Web\Assets\AppAssetBundle;
+use Mailery\Brand\Assets\BrandAssetBundle;
 use Opis\Closure\SerializableClosure;
 use Yiisoft\Router\Route;
 use Yiisoft\Router\UrlGeneratorInterface;
 
 return [
+    'assetManager' => [
+        'bundles' => [
+            AppAssetBundle::class => [
+                'depends' => [
+                    BrandAssetBundle::class,
+                ],
+            ],
+        ],
+    ],
+
     'cycle.common' => [
         'entityPaths' => [
             '@vendor/maileryio/mailery-brand/src/Entity',
@@ -33,13 +45,15 @@ return [
 
     'router' => [
         'routes' => [
-            Route::get('/brands', [DefaultController::class, 'index'])
+            '/dashboard/default/index' => Route::get('/brand/{brandId:\d+}', [DefaultController::class, 'index'])
+                ->name('/dashboard/default/index'),
+            '/brand/default/index' => Route::get('/brands', [DefaultController::class, 'index'])
                 ->name('/brand/default/index'),
-            Route::methods(['GET', 'POST'], '/brand/new-brand', [DefaultController::class, 'create'])
+            '/brand/default/create' => Route::methods(['GET', 'POST'], '/brand/new-brand', [DefaultController::class, 'create'])
                 ->name('/brand/default/create'),
-            Route::methods(['GET', 'POST'], '/brand/{id:\d+}/edit', [DefaultController::class, 'edit'])
+            '/brand/default/edit' => Route::methods(['GET', 'POST'], '/brand/{id:\d+}/edit', [DefaultController::class, 'edit'])
                 ->name('/brand/default/edit'),
-            Route::delete('/brand/{id:\d+}/delete', [DefaultController::class, 'delete'])
+            '/brand/default/delete' => Route::delete('/brand/{id:\d+}/delete', [DefaultController::class, 'delete'])
                 ->name('/brand/default/delete'),
         ],
     ],

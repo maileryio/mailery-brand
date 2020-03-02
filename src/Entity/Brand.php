@@ -56,10 +56,10 @@ class Brand implements BrandInterface
     private $description;
 
     /**
-     * @Column(type = "int", default="0")
+     * @Column(type = "int", default = "0")
      * @var string
      */
-    private $totalSubscribers;
+    private $totalSubscribers = 0;
 
     /**
      * @return string|null
