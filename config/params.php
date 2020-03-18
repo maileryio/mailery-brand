@@ -45,8 +45,6 @@ return [
 
     'router' => [
         'routes' => [
-            '/dashboard/default/index' => Route::get('/brand/{brandId:\d+}', [DefaultController::class, 'index'])
-                ->name('/dashboard/default/index'),
             '/brand/default/index' => Route::get('/brands', [DefaultController::class, 'index'])
                 ->name('/brand/default/index'),
             '/brand/default/create' => Route::methods(['GET', 'POST'], '/brand/new-brand', [DefaultController::class, 'create'])
