@@ -12,12 +12,14 @@ declare(strict_types=1);
 
 use Mailery\Brand\Middleware\BrandRequiredMiddleware;
 use Mailery\Brand\Service\BrandLocator;
+use Mailery\Brand\Router\BrandUrlGenerator;
 use Cycle\ORM\ORMInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Yiisoft\Router\UrlGeneratorInterface;
 
 return [
+    UrlGeneratorInterface::class => BrandUrlGenerator::class,
     BrandLocator::class => function (ContainerInterface $container) {
         $orm = $container->get(ORMInterface::class);
 

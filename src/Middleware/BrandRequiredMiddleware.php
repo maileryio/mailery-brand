@@ -5,8 +5,8 @@ namespace Mailery\Brand\Middleware;
 use Mailery\Brand\Exception\BrandRequiredException;
 use Mailery\Brand\Service\BrandLocator;
 use Psr\Http\Message\ResponseFactoryInterface;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Yiisoft\Router\UrlGeneratorInterface;
@@ -64,11 +64,11 @@ class BrandRequiredMiddleware implements MiddlewareInterface
     }
 
     /**
-     * @param ServerRequestInterface $request
+     * @param Request $request
      * @param RequestHandlerInterface $handler
-     * @return ResponseInterface
+     * @return Response
      */
-    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
+    public function process(Request $request, RequestHandlerInterface $handler): Response
     {
         $this->brandLocator->locate($request);
 

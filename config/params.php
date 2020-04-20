@@ -11,7 +11,6 @@ declare(strict_types=1);
  */
 
 use Mailery\Brand\Controller\DefaultController;
-use Mailery\Brand\Service\BrandLocator;
 use Mailery\Brand\Middleware\BrandRequiredMiddleware;
 use Mailery\Menu\MenuItem;
 use Mailery\Web\Assets\AppAssetBundle;
@@ -71,8 +70,8 @@ return [
                 'dashboard' => (new MenuItem())
                     ->withLabel('Dashboard')
                     ->withIcon('dashboard')
-                    ->withUrl(new SerializableClosure(function (UrlGeneratorInterface $urlGenerator, BrandLocator $brandLocator) {
-                        return $urlGenerator->generate('/', ['brandId' => $brandLocator->getBrand()->getId()]);
+                    ->withUrl(new SerializableClosure(function (UrlGeneratorInterface $urlGenerator) {
+                        return $urlGenerator->generate('/');
                     })),
             ],
         ],
