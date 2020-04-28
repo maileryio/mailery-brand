@@ -1,5 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
+/**
+ * Brand module for Mailery Platform
+ * @link      https://github.com/maileryio/mailery-brand
+ * @package   Mailery\Brand
+ * @license   BSD-3-Clause
+ * @copyright Copyright (c) 2020, Mailery (https://mailery.io/)
+ */
+
 namespace Mailery\Brand\Middleware;
 
 use Mailery\Brand\Exception\BrandRequiredException;
@@ -15,9 +25,9 @@ use Yiisoft\Yii\Web\Middleware\Redirect;
 class BrandRequiredMiddleware implements MiddlewareInterface
 {
     /**
-     * @var string|null
+     * @var string
      */
-    private ?string $route = null;
+    private string $route;
 
     /**
      * @var array
@@ -54,12 +64,13 @@ class BrandRequiredMiddleware implements MiddlewareInterface
     /**
      * @param string $name
      * @param array $parameters
-     * @return \self
+     * @return self
      */
     public function toRoute(string $name, array $parameters = []): self
     {
         $this->route = $name;
         $this->parameters = $parameters;
+
         return $this;
     }
 

@@ -1,32 +1,40 @@
 <?php
 
+declare(strict_types=1);
+
+/**
+ * Brand module for Mailery Platform
+ * @link      https://github.com/maileryio/mailery-brand
+ * @package   Mailery\Brand
+ * @license   BSD-3-Clause
+ * @copyright Copyright (c) 2020, Mailery (https://mailery.io/)
+ */
+
 namespace Mailery\Brand\Form;
 
+use Cycle\ORM\ORMInterface;
+use Cycle\ORM\Transaction;
+use FormManager\Factory as F;
+use FormManager\Form;
 use Mailery\Brand\Entity\Brand;
+use Mailery\Brand\Repository\BrandRepository;
 use Symfony\Component\Validator\Constraints;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
-use FormManager\Form;
-use FormManager\Factory as F;
-use Cycle\ORM\Transaction;
-use Cycle\ORM\ORMInterface;
-use Yiisoft\Security\PasswordHasher;
-use Mailery\Brand\Repository\BrandRepository;
 
 class BrandForm extends Form
 {
-
     /**
      * @var ORMInterface
      */
     private ORMInterface $orm;
 
     /**
-     * @var Brand
+     * @var Brand|null
      */
     private ?Brand $brand;
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function __construct(ORMInterface $orm)
     {
@@ -50,10 +58,14 @@ class BrandForm extends Form
     }
 
     /**
-     * @return Brand
+     * @return Brand|null
      */
-    public function save(): Brand
+    public function save(): ?Brand
     {
+        if (!$this->isValid()) {
+            return null;
+        }
+
         $name = $this['name']->getValue();
         $description = $this['description']->getValue();
 
@@ -82,7 +94,7 @@ class BrandForm extends Form
         $brandRepo = $this->orm->getRepository(Brand::class);
 
         $nameConstraint = new Constraints\Callback([
-            'callback' => function ($value, ExecutionContextInterface $context) use($brandRepo) {
+            'callback' => function ($value, ExecutionContextInterface $context) use ($brandRepo) {
                 if (empty($value)) {
                     return;
                 }
@@ -93,7 +105,7 @@ class BrandForm extends Form
                         ->atPath('name')
                         ->addViolation();
                 }
-            }
+            },
         ]);
 
         return [
@@ -110,5 +122,4 @@ class BrandForm extends Form
             '' => F::submit($this->user === null ? 'Create' : 'Update'),
         ];
     }
-
 }

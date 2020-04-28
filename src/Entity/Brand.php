@@ -12,21 +12,17 @@ declare(strict_types=1);
 
 namespace Mailery\Brand\Entity;
 
-use Cycle\Annotated\Annotation\Column;
-use Cycle\Annotated\Annotation\Entity;
-use Cycle\Annotated\Annotation\Table;
-use Cycle\Annotated\Annotation\Table\Index;
 use Mailery\Brand\Service\BrandInterface;
 
 /**
- * @Entity(
+ * @Cycle\Annotated\Annotation\Entity(
  *      table = "brands",
  *      repository = "Mailery\Brand\Repository\BrandRepository",
  *      mapper = "Yiisoft\Yii\Cycle\Mapper\TimestampedMapper"
  * )
- * @Table(
+ * @Cycle\Annotated\Annotation\Table(
  *      indexes = {
- *          @Index(columns = {"name"}, unique = true)
+ *          @Cycle\Annotated\Annotation\Table\Index(columns = {"name"}, unique = true)
  *      }
  * )
  */
@@ -38,26 +34,26 @@ class Brand implements BrandInterface
     const PASSWORD_RESET_TOKEN_EXPIRE = 3600;
 
     /**
-     * @Column(type = "primary")
+     * @Cycle\Annotated\Annotation\Column(type = "primary")
      * @var int|null
      */
     private $id;
 
     /**
-     * @Column(type = "string(32)")
+     * @Cycle\Annotated\Annotation\Column(type = "string(32)")
      * @var string
      */
     private $name;
 
     /**
-     * @Column(type = "text")
+     * @Cycle\Annotated\Annotation\Column(type = "text")
      * @var string
      */
     private $description;
 
     /**
-     * @Column(type = "int", default = "0")
-     * @var string
+     * @Cycle\Annotated\Annotation\Column(type = "int", default = "0")
+     * @var int
      */
     private $totalSubscribers = 0;
 
@@ -76,6 +72,7 @@ class Brand implements BrandInterface
     public function setId(int $id): self
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -94,6 +91,7 @@ class Brand implements BrandInterface
     public function setName(string $name): self
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -112,6 +110,7 @@ class Brand implements BrandInterface
     public function setDescription(string $description): self
     {
         $this->description = $description;
+
         return $this;
     }
 
@@ -130,7 +129,7 @@ class Brand implements BrandInterface
     public function setTotalSubscribers(int $totalSubscribers): self
     {
         $this->totalSubscribers = $totalSubscribers;
+
         return $this;
     }
-
 }

@@ -12,18 +12,17 @@ declare(strict_types=1);
 
 namespace Mailery\Brand\Controller;
 
-use Mailery\Brand\Controller;
-use Psr\Http\Message\ResponseInterface as Response;
-use Psr\Http\Message\ServerRequestInterface as Request;
 use Cycle\ORM\ORMInterface;
-use Mailery\Brand\Repository\BrandRepository;
+use Cycle\ORM\Transaction;
+use Mailery\Brand\Controller;
 use Mailery\Brand\Entity\Brand;
 use Mailery\Brand\Form\BrandForm;
+use Mailery\Brand\Repository\BrandRepository;
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
 use Yiisoft\Data\Reader\Sort;
-use Mailery\Widget\Dataview\Paginator\OffsetPaginator;
-use Yiisoft\Router\UrlGeneratorInterface as UrlGenerator;
 use Yiisoft\Http\Method;
-use Cycle\ORM\Transaction;
+use Yiisoft\Router\UrlGeneratorInterface as UrlGenerator;
 
 class DefaultController extends Controller
 {
@@ -35,11 +34,8 @@ class DefaultController extends Controller
      */
     public function index(ORMInterface $orm): Response
     {
-        /** @var BrandRepository $brandRepo */
-        $brandRepo = $orm->getRepository(Brand::class);
-
-        $dataReader = $brandRepo
-            ->findAll()
+        $dataReader = $this->getBrandRepository($orm)
+            ->getDataReader()
             ->withSort((new Sort([]))->withOrderString('name'));
 
         return $this->render('index', compact('dataReader'));
@@ -47,15 +43,13 @@ class DefaultController extends Controller
 
     /**
      * @param Request $request
+     * @param ORMInterface $orm
      * @return Response
      */
     public function view(Request $request, ORMInterface $orm): Response
     {
-        /** @var BrandRepository $brandRepo */
-        $brandRepo = $orm->getRepository(Brand::class);
-
         $brandId = $request->getAttribute('id');
-        if (empty($brandId) || ($brand = $brandRepo->findByPK($brandId)) === null) {
+        if (empty($brandId) || ($brand = $this->getBrandRepository($orm)->findByPK($brandId)) === null) {
             return $this->getResponseFactory()->createResponse(404);
         }
 
@@ -82,7 +76,7 @@ class DefaultController extends Controller
         if ($submitted) {
             $brandForm->loadFromServerRequest($request);
 
-            if ($brandForm->isValid() && ($brand = $brandForm->save()) !== null) {
+            if ($brandForm->save() !== null) {
                 return $this->redirect($urlGenerator->generate('/brand/default/index'));
             }
         }
@@ -99,28 +93,25 @@ class DefaultController extends Controller
      */
     public function edit(Request $request, ORMInterface $orm, BrandForm $brandForm, UrlGenerator $urlGenerator): Response
     {
-        /** @var BrandRepository $brandRepo */
-        $brandRepo = $orm->getRepository(Brand::class);
-
         $brandId = $request->getAttribute('id');
-        if (empty($brandId) || ($brand = $brandRepo->findByPK($brandId)) === null) {
+        if (empty($brandId) || ($brand = $this->getBrandRepository($orm)->findByPK($brandId)) === null) {
             return $this->getResponseFactory()->createResponse(404);
         }
 
         $brandForm
+            ->withBrand($brand)
             ->setAttributes([
                 'action' => $request->getUri()->getPath(),
                 'method' => 'post',
                 'enctype' => 'multipart/form-data',
-            ])
-            ->withBrand($brand);
+            ]);
 
         $submitted = $request->getMethod() === Method::POST;
 
         if ($submitted) {
             $brandForm->loadFromServerRequest($request);
 
-            if ($brandForm->isValid() && ($brand = $brandForm->save()) !== null) {
+            if (($brand = $brandForm->save()) !== null) {
                 return $this->redirect($urlGenerator->generate('/brand/default/index'));
             }
         }
@@ -136,11 +127,8 @@ class DefaultController extends Controller
      */
     public function delete(Request $request, ORMInterface $orm, UrlGenerator $urlGenerator): Response
     {
-        /** @var BrandRepository $brandRepo */
-        $brandRepo = $orm->getRepository(Brand::class);
-
         $brandId = $request->getAttribute('id');
-        if (empty($brandId) || ($brand = $brandRepo->findByPK($brandId)) === null) {
+        if (empty($brandId) || ($brand = $this->getBrandRepository($orm)->findByPK($brandId)) === null) {
             return $this->getResponseFactory()->createResponse(404);
         }
 
@@ -149,5 +137,14 @@ class DefaultController extends Controller
         $tr->run();
 
         return $this->redirect($urlGenerator->generate('/brand/default/index'));
+    }
+
+    /**
+     * @param ORMInterface $orm
+     * @return BrandRepository
+     */
+    private function getBrandRepository(ORMInterface $orm): BrandRepository
+    {
+        return $orm->getRepository(Brand::class);
     }
 }

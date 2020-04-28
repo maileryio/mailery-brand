@@ -1,17 +1,26 @@
 <?php
 
+declare(strict_types=1);
+
+/**
+ * Brand module for Mailery Platform
+ * @link      https://github.com/maileryio/mailery-brand
+ * @package   Mailery\Brand
+ * @license   BSD-3-Clause
+ * @copyright Copyright (c) 2020, Mailery (https://mailery.io/)
+ */
+
 namespace Mailery\Brand\Router;
 
-use Mailery\Brand\Service\BrandLocator;
-use Yiisoft\Router\RouteCollectionInterface;
-use Yiisoft\Router\UrlMatcherInterface;
-use Yiisoft\Router\UrlGeneratorInterface;
-use Yiisoft\Router\FastRoute\UrlGenerator;
 use FastRoute\RouteParser;
+use Mailery\Brand\Service\BrandLocator;
+use Yiisoft\Router\FastRoute\UrlGenerator;
+use Yiisoft\Router\RouteCollectionInterface;
+use Yiisoft\Router\UrlGeneratorInterface;
+use Yiisoft\Router\UrlMatcherInterface;
 
 class BrandUrlGenerator implements UrlGeneratorInterface
 {
-
     /**
      * @var BrandLocator
      */
@@ -28,8 +37,14 @@ class BrandUrlGenerator implements UrlGeneratorInterface
     private RouteCollectionInterface $routeCollection;
 
     /**
+     * @var RouteParser
+     */
+    private RouteParser $routeParser;
+
+    /**
+     * @param BrandLocator $brandLocator
      * @param UrlMatcherInterface $matcher
-     * @param RouteParser $parser
+     * @param RouteParser|null $parser
      */
     public function __construct(BrandLocator $brandLocator, UrlMatcherInterface $matcher, RouteParser $parser = null)
     {
@@ -40,7 +55,7 @@ class BrandUrlGenerator implements UrlGeneratorInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function generate(string $name, array $parameters = []): string
     {
@@ -65,7 +80,7 @@ class BrandUrlGenerator implements UrlGeneratorInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function generateAbsolute(string $name, array $parameters = [], string $scheme = null, string $host = null): string
     {
@@ -73,7 +88,7 @@ class BrandUrlGenerator implements UrlGeneratorInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getUriPrefix(): string
     {
@@ -81,11 +96,10 @@ class BrandUrlGenerator implements UrlGeneratorInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function setUriPrefix(string $name): void
     {
         $this->urlGenerator->setUriPrefix($name);
     }
-
 }

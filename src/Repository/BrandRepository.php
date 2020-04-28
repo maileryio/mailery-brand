@@ -21,21 +21,21 @@ use Yiisoft\Yii\Cycle\DataReader\SelectDataReader;
 class BrandRepository extends Repository
 {
     /**
+     * @param array $scope
+     * @param array $orderBy
+     * @return SelectDataReader
+     */
+    public function getDataReader(array $scope = [], array $orderBy = []): SelectDataReader
+    {
+        return new SelectDataReader($this->select()->where($scope)->orderBy($orderBy));
+    }
+
+    /**
      * @return Select
      */
     public function findActive(): Select
     {
         return $this->select()->where('status', 'active');
-    }
-
-    /**
-     * @param array $scope
-     * @param array $orderBy
-     * @return SelectDataReader
-     */
-    public function findAll(array $scope = [], array $orderBy = []): SelectDataReader
-    {
-        return new SelectDataReader($this->select()->where($scope)->orderBy($orderBy));
     }
 
     /**

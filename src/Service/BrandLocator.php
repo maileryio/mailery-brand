@@ -1,11 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
+/**
+ * Brand module for Mailery Platform
+ * @link      https://github.com/maileryio/mailery-brand
+ * @package   Mailery\Brand
+ * @license   BSD-3-Clause
+ * @copyright Copyright (c) 2020, Mailery (https://mailery.io/)
+ */
+
 namespace Mailery\Brand\Service;
 
+use Cycle\ORM\ORMInterface;
 use Mailery\Brand\Entity\Brand;
 use Mailery\Brand\Exception\BrandRequiredException;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use Cycle\ORM\ORMInterface;
+use Mailery\Brand\Service\BrandInterface;
 
 class BrandLocator
 {
@@ -33,33 +44,28 @@ class BrandLocator
     }
 
     /**
+     * @return BrandInterface
+     * @throws BrandRequiredException
+     */
+    public function getBrand(): BrandInterface
+    {
+        if ($this->brand === null) {
+            throw new BrandRequiredException();
+        }
+
+        return $this->brand;
+    }
+
+    /**
      * @param string $regexp
-     * @return \self
+     * @return self
      */
     public function withRegexp(string $regexp): self
     {
         $new = clone $this;
         $new->regexp = $regexp;
+
         return $new;
-    }
-
-    /**
-     * @return bool
-     */
-    public function hasBrand(): bool
-    {
-        return $this->brand !== null;
-    }
-
-    /**
-     * @return BrandInterface
-     */
-    public function getBrand(): BrandInterface
-    {
-        if (!$this->hasBrand()) {
-            throw new BrandRequiredException();
-        }
-        return $this->brand;
     }
 
     /**
@@ -74,7 +80,7 @@ class BrandLocator
         $brandId = null;
         $brandRepo = $this->orm->getRepository(Brand::class);
 
-        if (preg_match($this->regexp, $path, $matches) && !empty($matches['brandId'])) {
+        if ($this->regexp !== null && preg_match($this->regexp, $path, $matches) && !empty($matches['brandId'])) {
             $brandId = (int) $matches['brandId'];
         }
 
@@ -83,4 +89,11 @@ class BrandLocator
         }
     }
 
+    /**
+     * @return bool
+     */
+    public function hasBrand(): bool
+    {
+        return $this->brand !== null;
+    }
 }

@@ -10,10 +10,10 @@ declare(strict_types=1);
  * @copyright Copyright (c) 2020, Mailery (https://mailery.io/)
  */
 
-use Mailery\Brand\Middleware\BrandRequiredMiddleware;
-use Mailery\Brand\Service\BrandLocator;
-use Mailery\Brand\Router\BrandUrlGenerator;
 use Cycle\ORM\ORMInterface;
+use Mailery\Brand\Middleware\BrandRequiredMiddleware;
+use Mailery\Brand\Router\BrandUrlGenerator;
+use Mailery\Brand\Service\BrandLocator;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Yiisoft\Router\UrlGeneratorInterface;
