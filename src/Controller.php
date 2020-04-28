@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Mailery\Brand;
 
-use Mailery\Web\Controller as WebController;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Yiisoft\Aliases\Aliases;
 use Yiisoft\View\WebView;
