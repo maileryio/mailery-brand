@@ -12,8 +12,6 @@ declare(strict_types=1);
 
 namespace Mailery\Brand\Entity;
 
-use Mailery\Brand\Contract\BrandInterface;
-
 /**
  * @Cycle\Annotated\Annotation\Entity(
  *      table = "brands",
@@ -26,7 +24,7 @@ use Mailery\Brand\Contract\BrandInterface;
  *      }
  * )
  */
-class Brand implements BrandInterface
+class Brand
 {
     const STATUS_ACTIVE = 'active';
     const STATUS_DISABLED = 'disabled';

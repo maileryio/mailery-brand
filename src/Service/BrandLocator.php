@@ -13,8 +13,6 @@ declare(strict_types=1);
 namespace Mailery\Brand\Service;
 
 use Cycle\ORM\ORMInterface;
-use Mailery\Brand\Contract\BrandInterface;
-use Mailery\Brand\Contract\BrandLocatorInterface;
 use Mailery\Brand\Entity\Brand;
 use Mailery\Brand\Exception\BrandRequiredException;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -27,9 +25,9 @@ class BrandLocator implements BrandLocatorInterface
     private ?string $regexp = null;
 
     /**
-     * @var BrandInterface|null
+     * @var Brand|null
      */
-    private ?BrandInterface $brand = null;
+    private ?Brand $brand = null;
 
     /**
      * @var ORMInterface
@@ -46,9 +44,9 @@ class BrandLocator implements BrandLocatorInterface
 
     /**
      * @throws BrandRequiredException
-     * @return BrandInterface
+     * @return Brand
      */
-    public function getBrand(): BrandInterface
+    public function getBrand(): Brand
     {
         if ($this->brand === null) {
             throw new BrandRequiredException();

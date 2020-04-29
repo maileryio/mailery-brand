@@ -11,18 +11,17 @@ declare(strict_types=1);
  */
 
 use Cycle\ORM\ORMInterface;
-use Mailery\Brand\Contract\BrandLocatorInterface;
 use Mailery\Brand\Middleware\BrandRequiredMiddleware;
 use Mailery\Brand\Router\BrandUrlGenerator;
 use Mailery\Brand\Service\BrandLocator;
+use Mailery\Brand\Service\BrandLocatorInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Yiisoft\Router\UrlGeneratorInterface;
 
 return [
     UrlGeneratorInterface::class => BrandUrlGenerator::class,
-    BrandLocatorInterface::class => BrandLocator::class,
-    BrandLocator::class => function (ContainerInterface $container) {
+    BrandLocatorInterface::class => function (ContainerInterface $container) {
         $orm = $container->get(ORMInterface::class);
 
         return (new BrandLocator($orm))
