@@ -17,7 +17,7 @@ $this->setTitle($brand->getName());
             <h1 class="h2">Brand #<?= $brand->getId(); ?></h1>
             <div class="btn-toolbar float-right">
                 <?= Link::widget()
-                    ->label(Icon::widget()->name('delete')->options(['class' => 'mr-1']) . ' Delete')
+                    ->label((string) Icon::widget()->name('delete')->options(['class' => 'mr-1']) . ' Delete')
                     ->method('delete')
                     ->href($urlGenerator->generate('/brand/default/delete', ['id' => $brand->getId()]))
                     ->confirm('Are you sure?')
