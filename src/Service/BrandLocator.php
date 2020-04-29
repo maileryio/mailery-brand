@@ -13,12 +13,13 @@ declare(strict_types=1);
 namespace Mailery\Brand\Service;
 
 use Cycle\ORM\ORMInterface;
+use Mailery\Brand\Contract\BrandInterface;
+use Mailery\Brand\Contract\BrandLocatorInterface;
 use Mailery\Brand\Entity\Brand;
 use Mailery\Brand\Exception\BrandRequiredException;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use Mailery\Brand\Service\BrandInterface;
 
-class BrandLocator
+class BrandLocator implements BrandLocatorInterface
 {
     /**
      * @var string|null
@@ -44,8 +45,8 @@ class BrandLocator
     }
 
     /**
-     * @return BrandInterface
      * @throws BrandRequiredException
+     * @return BrandInterface
      */
     public function getBrand(): BrandInterface
     {

@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Mailery\Brand\Entity;
 
-use Mailery\Brand\Service\BrandInterface;
+use Mailery\Brand\Contract\BrandInterface;
 
 /**
  * @Cycle\Annotated\Annotation\Entity(
