@@ -21,7 +21,8 @@ use Yiisoft\Router\UrlGeneratorInterface;
 
 return [
     UrlGeneratorInterface::class => BrandUrlGenerator::class,
-    BrandLocatorInterface::class => function (ContainerInterface $container) {
+    BrandLocatorInterface::class => BrandLocator::class,
+    BrandLocator::class => function (ContainerInterface $container) {
         $orm = $container->get(ORMInterface::class);
 
         return (new BrandLocator($orm))
