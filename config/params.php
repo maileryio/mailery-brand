@@ -62,7 +62,8 @@ return [
                     ->withLabel('My brands')
                     ->withUrl(new SerializableClosure(function (UrlGeneratorInterface $urlGenerator) {
                         return $urlGenerator->generate('/brand/default/index');
-                    })),
+                    }))
+                    ->withOrder(200),
             ],
         ],
         'sidebar' => [
@@ -72,7 +73,8 @@ return [
                     ->withIcon('dashboard')
                     ->withUrl(new SerializableClosure(function (UrlGeneratorInterface $urlGenerator) {
                         return $urlGenerator->generate('/');
-                    })),
+                    }))
+                    ->withOrder(100),
             ],
         ],
     ],

@@ -111,7 +111,7 @@ class DefaultController extends Controller
         if ($submitted) {
             $brandForm->loadFromServerRequest($request);
 
-            if (($brand = $brandForm->save()) !== null) {
+            if ($brandForm->save() !== null) {
                 return $this->redirect($urlGenerator->generate('/brand/default/index'));
             }
         }
