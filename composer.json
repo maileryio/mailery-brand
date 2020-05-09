@@ -19,8 +19,8 @@
     "require": {
         "php": "^7.4",
         "cycle/orm": "^1.2",
-        "foxy/foxy": "^1.0",
         "form-manager/form-manager": "^6.0",
+        "foxy/foxy": "^1.0",
         "maileryio/mailery-menu": "dev-master",
         "maileryio/mailery-web": "dev-master",
         "maileryio/widget-dataview": "dev-master",
