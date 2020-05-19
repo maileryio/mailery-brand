@@ -55,7 +55,7 @@ $this->setTitle('My Brands');
                             <span class="badge badge-primary ml-2 mr-2"><?= $brand->getTotalSubscribers(); ?></span>
                         </h5>
                         <p class="card-text text-muted text-truncate" title="<?= $brand->getDescription() . $brand->getDescription() . $brand->getDescription(); ?>">
-                            <?= $brand->getDescription() . $brand->getDescription() . $brand->getDescription(); ?>
+                            <?= $brand->getDescription(); ?>
                         </p>
                     </div>
                     <div class="card-body h-50 bg-light border-top">

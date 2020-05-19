@@ -12,11 +12,13 @@ declare(strict_types=1);
 
 namespace Mailery\Brand\Entity;
 
+use Mailery\Common\Entity\RoutableEntityInterface;
+
 /**
  * @Cycle\Annotated\Annotation\Entity(
  *      table = "brands",
  *      repository = "Mailery\Brand\Repository\BrandRepository",
- *      mapper = "Yiisoft\Yii\Cycle\Mapper\TimestampedMapper"
+ *      mapper = "Mailery\Brand\Mapper\DefaultMapper"
  * )
  * @Cycle\Annotated\Annotation\Table(
  *      indexes = {
@@ -24,7 +26,7 @@ namespace Mailery\Brand\Entity;
  *      }
  * )
  */
-class Brand
+class Brand implements RoutableEntityInterface
 {
     const STATUS_ACTIVE = 'active';
     const STATUS_DISABLED = 'disabled';
@@ -54,6 +56,14 @@ class Brand
      * @var int
      */
     private $totalSubscribers = 0;
+
+    /**
+     * @return string
+     */
+    public function __toString(): string
+    {
+        return $this->getName();
+    }
 
     /**
      * @return string|null
@@ -129,5 +139,37 @@ class Brand
         $this->totalSubscribers = $totalSubscribers;
 
         return $this;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getEditRouteName(): ?string
+    {
+        return '/brand/default/edit';
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getEditRouteParams(): array
+    {
+        return ['id' => $this->getId()];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getViewRouteName(): ?string
+    {
+        return '/dashboard/default/index';
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getViewRouteParams(): array
+    {
+        return ['brandId' => $this->getId()];
     }
 }
