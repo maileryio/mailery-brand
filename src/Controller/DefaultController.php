@@ -18,6 +18,7 @@ use Mailery\Brand\Controller;
 use Mailery\Brand\Entity\Brand;
 use Mailery\Brand\Form\BrandForm;
 use Mailery\Brand\Repository\BrandRepository;
+use Mailery\Subscriber\Counter\SubscriberCounter;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Yiisoft\Data\Reader\Sort;
@@ -30,15 +31,16 @@ class DefaultController extends Controller
 
     /**
      * @param ORMInterface $orm
+     * @param SubscriberCounter $subscriberCounter
      * @return Response
      */
-    public function index(ORMInterface $orm): Response
+    public function index(ORMInterface $orm, SubscriberCounter $subscriberCounter): Response
     {
         $dataReader = $this->getBrandRepository($orm)
             ->getDataReader()
             ->withSort((new Sort([]))->withOrderString('name'));
 
-        return $this->render('index', compact('dataReader'));
+        return $this->render('index', compact('dataReader', 'subscriberCounter'));
     }
 
     /**

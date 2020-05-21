@@ -3,6 +3,7 @@
 namespace Mailery\Brand\Mapper;
 
 use Mailery\Activity\Log\Mapper\LoggableMapper;
+use Mailery\Cycle\Mapper\ChainItemList;
 
 /**
  * @Cycle\Annotated\Annotation\Table(
@@ -20,5 +21,15 @@ class DefaultMapper extends LoggableMapper
     protected function getModule(): string
     {
         return 'Brand';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getChainItemList(): ChainItemList
+    {
+        $itemList = parent::getChainItemList();
+
+        return $itemList;
     }
 }

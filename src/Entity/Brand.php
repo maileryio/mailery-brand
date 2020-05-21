@@ -13,6 +13,8 @@ declare(strict_types=1);
 namespace Mailery\Brand\Entity;
 
 use Mailery\Common\Entity\RoutableEntityInterface;
+use Mailery\Activity\Log\Entity\LoggableEntityTrait;
+use Mailery\Activity\Log\Entity\LoggableEntityInterface;
 
 /**
  * @Cycle\Annotated\Annotation\Entity(
@@ -26,8 +28,10 @@ use Mailery\Common\Entity\RoutableEntityInterface;
  *      }
  * )
  */
-class Brand implements RoutableEntityInterface
+class Brand implements RoutableEntityInterface, LoggableEntityInterface
 {
+    use LoggableEntityTrait;
+
     const STATUS_ACTIVE = 'active';
     const STATUS_DISABLED = 'disabled';
 
@@ -50,12 +54,6 @@ class Brand implements RoutableEntityInterface
      * @var string
      */
     private $description;
-
-    /**
-     * @Cycle\Annotated\Annotation\Column(type = "int", default = "0")
-     * @var int
-     */
-    private $totalSubscribers = 0;
 
     /**
      * @return string
@@ -118,25 +116,6 @@ class Brand implements RoutableEntityInterface
     public function setDescription(string $description): self
     {
         $this->description = $description;
-
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getTotalSubscribers(): int
-    {
-        return $this->totalSubscribers;
-    }
-
-    /**
-     * @param int $totalSubscribers
-     * @return self
-     */
-    public function setTotalSubscribers(int $totalSubscribers): self
-    {
-        $this->totalSubscribers = $totalSubscribers;
 
         return $this;
     }

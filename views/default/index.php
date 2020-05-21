@@ -5,6 +5,7 @@ use Mailery\Icon\Icon;
 use Mailery\Widget\Link\Link;
 
 /** @var Mailery\Web\View\WebView $this */
+/** @var Mailery\Subscriber\Counter\SubscriberCounter $subscriberCounter /
 /** @var Yiisoft\Aliases\Aliases $aliases */
 /** @var Yiisoft\I18n\TranslatorInterface $translator */
 /** @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator */
@@ -25,6 +26,7 @@ $this->setTitle('My Brands');
     </div><?php
     foreach ($dataReader->read() as $brand) {
         /* @var $brand Brand */
+        $subscriberCounter = $subscriberCounter->withBrand($brand);
         $editUrl = $urlGenerator->generate('/brand/default/edit', ['id' => $brand->getId()]);
         $dashboardUrl = $urlGenerator->generate('/dashboard/default/index', ['brandId' => $brand->getId()]); ?><div class="col-md-6 col-lg-4">
             <ui-brand-card>
@@ -48,11 +50,11 @@ $this->setTitle('My Brands');
                 <div class="card mb-4 shadow-sm" style="height: 180px;">
                     <div class="card-body h-50 position-relative">
                         <h5 class="card-title d-flex">
-                            <?php $title = $translator->translate('{totalCount, number} {totalCount, plural, one{subscriber} other{subscribers}}', ['totalCount' => $brand->getTotalSubscribers()]); ?>
+                            <?php $title = $translator->translate('{totalCount, number} {totalCount, plural, one{subscriber} other{subscribers}}', ['totalCount' => $subscriberCounter->getTotalCount()]); ?>
                             <a href="<?= $dashboardUrl; ?>" title="<?= $title; ?>" class="text-decoration-none text-truncate text-body stretched-link">
                                 <?= $brand->getName(); ?>
                             </a>
-                            <span class="badge badge-primary ml-2 mr-2"><?= $brand->getTotalSubscribers(); ?></span>
+                            <span class="badge badge-primary ml-2 mr-2"><?= $subscriberCounter->getTotalCount(); ?></span>
                         </h5>
                         <p class="card-text text-muted text-truncate" title="<?= $brand->getDescription() . $brand->getDescription() . $brand->getDescription(); ?>">
                             <?= $brand->getDescription(); ?>
