@@ -12,9 +12,7 @@ declare(strict_types=1);
 
 namespace Mailery\Brand\Controller;
 
-use Cycle\ORM\ORMInterface;
-use Cycle\ORM\Transaction;
-use Mailery\Brand\Controller;
+use Mailery\Common\Web\Controller;
 use Mailery\Brand\Entity\Brand;
 use Mailery\Brand\Form\BrandForm;
 use Mailery\Brand\Repository\BrandRepository;
@@ -24,19 +22,19 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Http\Method;
 use Yiisoft\Router\UrlGeneratorInterface as UrlGenerator;
+use Mailery\Brand\Service\BrandService;
 
 class DefaultController extends Controller
 {
-    private const PAGINATION_INDEX = 5;
+    private const PAGINATION_INDEX = 10;
 
     /**
-     * @param ORMInterface $orm
      * @param SubscriberCounter $subscriberCounter
      * @return Response
      */
-    public function index(ORMInterface $orm, SubscriberCounter $subscriberCounter): Response
+    public function index(SubscriberCounter $subscriberCounter): Response
     {
-        $dataReader = $this->getBrandRepository($orm)
+        $dataReader = $this->getBrandRepository()
             ->getDataReader()
             ->withSort((new Sort([]))->withOrderString('name'));
 
@@ -45,13 +43,12 @@ class DefaultController extends Controller
 
     /**
      * @param Request $request
-     * @param ORMInterface $orm
      * @return Response
      */
-    public function view(Request $request, ORMInterface $orm): Response
+    public function view(Request $request): Response
     {
         $brandId = $request->getAttribute('id');
-        if (empty($brandId) || ($brand = $this->getBrandRepository($orm)->findByPK($brandId)) === null) {
+        if (empty($brandId) || ($brand = $this->getBrandRepository()->findByPK($brandId)) === null) {
             return $this->getResponseFactory()->createResponse(404);
         }
 
@@ -88,15 +85,14 @@ class DefaultController extends Controller
 
     /**
      * @param Request $request
-     * @param ORMInterface $orm
      * @param BrandForm $brandForm
      * @param UrlGenerator $urlGenerator
      * @return Response
      */
-    public function edit(Request $request, ORMInterface $orm, BrandForm $brandForm, UrlGenerator $urlGenerator): Response
+    public function edit(Request $request, BrandForm $brandForm, UrlGenerator $urlGenerator): Response
     {
         $brandId = $request->getAttribute('id');
-        if (empty($brandId) || ($brand = $this->getBrandRepository($orm)->findByPK($brandId)) === null) {
+        if (empty($brandId) || ($brand = $this->getBrandRepository()->findByPK($brandId)) === null) {
             return $this->getResponseFactory()->createResponse(404);
         }
 
@@ -123,30 +119,27 @@ class DefaultController extends Controller
 
     /**
      * @param Request $request
-     * @param ORMInterface $orm
+     * @param BrandService $brandService
      * @param UrlGenerator $urlGenerator
      * @return Response
      */
-    public function delete(Request $request, ORMInterface $orm, UrlGenerator $urlGenerator): Response
+    public function delete(Request $request, BrandService $brandService, UrlGenerator $urlGenerator): Response
     {
         $brandId = $request->getAttribute('id');
-        if (empty($brandId) || ($brand = $this->getBrandRepository($orm)->findByPK($brandId)) === null) {
+        if (empty($brandId) || ($brand = $this->getBrandRepository()->findByPK($brandId)) === null) {
             return $this->getResponseFactory()->createResponse(404);
         }
 
-        $tr = new Transaction($orm);
-        $tr->delete($brand);
-        $tr->run();
+        $brandService->delete($brand);
 
         return $this->redirect($urlGenerator->generate('/brand/default/index'));
     }
 
     /**
-     * @param ORMInterface $orm
      * @return BrandRepository
      */
-    private function getBrandRepository(ORMInterface $orm): BrandRepository
+    private function getBrandRepository(): BrandRepository
     {
-        return $orm->getRepository(Brand::class);
+        return $this->getOrm()->getRepository(Brand::class);
     }
 }

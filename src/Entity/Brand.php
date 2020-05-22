@@ -20,20 +20,13 @@ use Mailery\Activity\Log\Entity\LoggableEntityInterface;
  * @Cycle\Annotated\Annotation\Entity(
  *      table = "brands",
  *      repository = "Mailery\Brand\Repository\BrandRepository",
- *      mapper = "Mailery\Brand\Mapper\DefaultMapper"
- * )
- * @Cycle\Annotated\Annotation\Table(
- *      indexes = {
- *          @Cycle\Annotated\Annotation\Table\Index(columns = {"name"}, unique = true)
- *      }
+ *      mapper = "Mailery\Brand\Mapper\DefaultMapper",
+ *      constrain = "Mailery\Brand\Constrain\DefaultConstrain"
  * )
  */
 class Brand implements RoutableEntityInterface, LoggableEntityInterface
 {
     use LoggableEntityTrait;
-
-    const STATUS_ACTIVE = 'active';
-    const STATUS_DISABLED = 'disabled';
 
     const PASSWORD_RESET_TOKEN_EXPIRE = 3600;
 

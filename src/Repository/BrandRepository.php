@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Mailery\Brand\Repository;
 
-use Cycle\ORM\Select;
 use Cycle\ORM\Select\QueryBuilder;
 use Cycle\ORM\Select\Repository;
 use Mailery\Brand\Entity\Brand;
@@ -31,11 +30,14 @@ class BrandRepository extends Repository
     }
 
     /**
-     * @return Select
+     * @return self
      */
-    public function findActive(): Select
+    public function withDeleted(): self
     {
-        return $this->select()->where('status', 'active');
+        $repo = clone $this;
+        $repo->select->constrain(null);
+
+        return $repo;
     }
 
     /**

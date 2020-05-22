@@ -20,6 +20,8 @@ use Mailery\Brand\Entity\Brand;
 use Mailery\Brand\Repository\BrandRepository;
 use Symfony\Component\Validator\Constraints;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Mailery\Brand\Service\BrandService;
+use Mailery\Brand\ValueObject\BrandValueObject;
 
 class BrandForm extends Form
 {
@@ -34,11 +36,17 @@ class BrandForm extends Form
     private ?Brand $brand;
 
     /**
+     * @var BrandService
+     */
+    private BrandService $brandService;
+
+    /**
      * {@inheritdoc}
      */
-    public function __construct(ORMInterface $orm)
+    public function __construct(BrandService $brandService, ORMInterface $orm)
     {
         $this->orm = $orm;
+        $this->brandService = $brandService;
         parent::__construct($this->inputs());
     }
 
@@ -66,21 +74,13 @@ class BrandForm extends Form
             return null;
         }
 
-        $name = $this['name']->getValue();
-        $description = $this['description']->getValue();
+        $valueObject = BrandValueObject::fromForm($this);
 
         if (($brand = $this->brand) === null) {
-            $brand = new Brand();
+            $brand = $this->brandService->create($valueObject);
+        } else {
+            $brand = $this->brandService->update($brand, $valueObject);
         }
-
-        $brand
-            ->setName($name)
-            ->setDescription($description)
-        ;
-
-        $tr = new Transaction($this->orm);
-        $tr->persist($brand);
-        $tr->run();
 
         return $brand;
     }
@@ -90,16 +90,13 @@ class BrandForm extends Form
      */
     private function inputs(): array
     {
-        /** @var BrandRepository $brandRepo */
-        $brandRepo = $this->orm->getRepository(Brand::class);
-
         $nameConstraint = new Constraints\Callback([
-            'callback' => function ($value, ExecutionContextInterface $context) use ($brandRepo) {
+            'callback' => function ($value, ExecutionContextInterface $context) {
                 if (empty($value)) {
                     return;
                 }
 
-                $brand = $brandRepo->findByName($value, $this->brand);
+                $brand = $this->getBrandRepository()->findByName($value, $this->brand);
                 if ($brand !== null) {
                     $context->buildViolation('This brand name already exists.')
                         ->atPath('name')
@@ -121,5 +118,13 @@ class BrandForm extends Form
 
             '' => F::submit($this->user === null ? 'Create' : 'Update'),
         ];
+    }
+
+    /**
+     * @return BrandRepository
+     */
+    private function getBrandRepository(): BrandRepository
+    {
+        return $this->orm->getRepository(Brand::class);
     }
 }
