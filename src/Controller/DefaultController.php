@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Mailery\Brand\Controller;
 
-use Mailery\Common\Web\Controller;
+use Mailery\Brand\WebController;
 use Mailery\Brand\Entity\Brand;
 use Mailery\Brand\Form\BrandForm;
 use Mailery\Brand\Repository\BrandRepository;
@@ -24,7 +24,7 @@ use Yiisoft\Http\Method;
 use Yiisoft\Router\UrlGeneratorInterface as UrlGenerator;
 use Mailery\Brand\Service\BrandService;
 
-class DefaultController extends Controller
+class DefaultController extends WebController
 {
     private const PAGINATION_INDEX = 10;
 

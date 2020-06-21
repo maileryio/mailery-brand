@@ -10,26 +10,14 @@ declare(strict_types=1);
  * @copyright Copyright (c) 2020, Mailery (https://mailery.io/)
  */
 
-use Mailery\Brand\Assets\BrandAssetBundle;
 use Mailery\Brand\Controller\DefaultController;
 use Mailery\Brand\Middleware\BrandRequiredMiddleware;
 use Mailery\Menu\MenuItem;
-use Mailery\Web\Assets\AppAssetBundle;
 use Opis\Closure\SerializableClosure;
 use Yiisoft\Router\Route;
 use Yiisoft\Router\UrlGeneratorInterface;
 
 return [
-    'assetManager' => [
-        'bundles' => [
-            AppAssetBundle::class => [
-                'depends' => [
-                    BrandAssetBundle::class,
-                ],
-            ],
-        ],
-    ],
-
     'cycle.common' => [
         'entityPaths' => [
             '@vendor/maileryio/mailery-brand/src/Entity',
