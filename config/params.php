@@ -18,15 +18,9 @@ use Yiisoft\Router\Route;
 use Yiisoft\Router\UrlGeneratorInterface;
 
 return [
-    'cycle.common' => [
-        'entityPaths' => [
+    'yiisoft/yii-cycle' => [
+        'annotated-entity-paths' => [
             '@vendor/maileryio/mailery-brand/src/Entity',
-        ],
-    ],
-
-    'session' => [
-        'options' => [
-            'cookie_secure' => 0,
         ],
     ],
 
