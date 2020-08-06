@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use Mailery\Activity\Log\Widget\ActivityLogLink;
+use Mailery\Brand\Module;
 use Mailery\Brand\Entity\Brand;
 use Mailery\Icon\Icon;
 use Mailery\Widget\Link\Link;
@@ -36,6 +38,11 @@ $this->setTitle('My Brands');
                 <template v-slot:dropdown-button-items>
                     <b-dropdown-item href="<?= $editUrl; ?>">Edit</b-dropdown-item>
                     <b-dropdown-item href="<?= $dashboardUrl; ?>">Dashboard</b-dropdown-item>
+                    <?= ActivityLogLink::widget()
+                        ->entity($brand)
+                        ->tag('b-dropdown-item')
+                        ->label('Activity log')
+                        ->module(Module::NAME); ?>
                     <b-dropdown-divider></b-dropdown-divider>
                     <b-dropdown-text variant="danger" class="dropdown-item-custom-link"><?= Link::widget()
                         ->label('Delete brand')
