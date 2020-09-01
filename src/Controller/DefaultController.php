@@ -23,6 +23,7 @@ use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Http\Method;
 use Yiisoft\Router\UrlGeneratorInterface as UrlGenerator;
 use Mailery\Brand\Service\BrandService;
+use Mailery\Template\Provider\TemplateTypeProvider;
 
 class DefaultController extends WebController
 {
@@ -30,15 +31,16 @@ class DefaultController extends WebController
 
     /**
      * @param SubscriberCounter $subscriberCounter
+     * @param TemplateTypeProvider $templateTypeProvider
      * @return Response
      */
-    public function index(SubscriberCounter $subscriberCounter): Response
+    public function index(SubscriberCounter $subscriberCounter, TemplateTypeProvider $templateTypeProvider): Response
     {
         $dataReader = $this->getBrandRepository()
             ->getDataReader()
             ->withSort((new Sort([]))->withOrderString('name'));
 
-        return $this->render('index', compact('dataReader', 'subscriberCounter'));
+        return $this->render('index', compact('dataReader', 'subscriberCounter', 'templateTypeProvider'));
     }
 
     /**
