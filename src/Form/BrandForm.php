@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Mailery\Brand\Form;
 
 use Cycle\ORM\ORMInterface;
-use Cycle\ORM\Transaction;
 use FormManager\Factory as F;
 use FormManager\Form;
 use Mailery\Brand\Entity\Brand;
@@ -48,6 +47,17 @@ class BrandForm extends Form
         $this->orm = $orm;
         $this->brandService = $brandService;
         parent::__construct($this->inputs());
+    }
+
+    /**
+     * @param string $csrf
+     * @return \self
+     */
+    public function withCsrf(string $value, string $name = '_csrf'): self
+    {
+        $this->offsetSet($name, F::hidden($value));
+
+        return $this;
     }
 
     /**

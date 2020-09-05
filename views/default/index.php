@@ -5,7 +5,6 @@ use Mailery\Brand\Module;
 use Mailery\Brand\Entity\Brand;
 use Mailery\Icon\Icon;
 use Mailery\Widget\Link\Link;
-use Yiisoft\Html\Html;
 
 /** @var Mailery\Web\View\WebView $this */
 /** @var Mailery\Subscriber\Counter\SubscriberCounter $subscriberCounter /
@@ -14,6 +13,8 @@ use Yiisoft\Html\Html;
 /** @var Yiisoft\I18n\TranslatorInterface $translator */
 /** @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator */
 /** @var Yiisoft\Data\Reader\DataReaderInterface $dataReader*/
+/** @var string $csrf */
+
 $this->setTitle('My Brands');
 
 ?><div class="row">

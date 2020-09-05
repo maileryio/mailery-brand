@@ -8,7 +8,9 @@ use Mailery\Widget\Link\Link;
 /** @var Mailery\Web\View\WebView $this */
 /** @var Psr\Http\Message\ServerRequestInterface $request */
 /** @var \Mailery\Brand\Entity\Brand $brand */
+/** @var string $csrf */
 /** @var bool $submitted */
+
 $this->setTitle($brand->getName());
 
 ?><div class="row">

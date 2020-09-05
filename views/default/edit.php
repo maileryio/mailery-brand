@@ -7,7 +7,9 @@ use Mailery\Widget\Form\FormRenderer;
 /** @var Psr\Http\Message\ServerRequestInterface $request */
 /** @var Mailery\Brand\Entity\Brand $brand */
 /** @var Mailery\Brand\Form\BrandForm $brandForm */
+/** @var string $csrf */
 /** @var bool $submitted */
+
 $this->setTitle('Edit Brand #' . $brand->getId());
 
 ?><div class="row">
@@ -29,6 +31,6 @@ $this->setTitle('Edit Brand #' . $brand->getId());
 <div class="mb-2"></div>
 <div class="row">
     <div class="col-6">
-        <?= (new FormRenderer($brandForm))($submitted); ?>
+        <?= (new FormRenderer($brandForm->withCsrf($csrf)))($submitted); ?>
     </div>
 </div>

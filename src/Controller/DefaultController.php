@@ -12,8 +12,6 @@ declare(strict_types=1);
 
 namespace Mailery\Brand\Controller;
 
-use Mailery\Brand\WebController;
-use Mailery\Brand\Entity\Brand;
 use Mailery\Brand\Form\BrandForm;
 use Mailery\Brand\Repository\BrandRepository;
 use Mailery\Subscriber\Counter\SubscriberCounter;
@@ -24,10 +22,42 @@ use Yiisoft\Http\Method;
 use Yiisoft\Router\UrlGeneratorInterface as UrlGenerator;
 use Mailery\Brand\Service\BrandService;
 use Mailery\Template\Provider\TemplateTypeProvider;
+use Mailery\Web\ViewRenderer;
+use Psr\Http\Message\ResponseFactoryInterface as ResponseFactory;
 
-class DefaultController extends WebController
+class DefaultController
 {
     private const PAGINATION_INDEX = 10;
+
+    /**
+     * @var ViewRenderer
+     */
+    private ViewRenderer $viewRenderer;
+
+    /**
+     * @var ResponseFactory
+     */
+    private ResponseFactory $responseFactory;
+
+    /**
+     * @var BrandRepository
+     */
+    private BrandRepository $brandRepo;
+
+    /**
+     * @param ViewRenderer $viewRenderer
+     * @param ResponseFactory $responseFactory
+     * @param BrandRepository $brandRepo
+     */
+    public function __construct(ViewRenderer $viewRenderer, ResponseFactory $responseFactory, BrandRepository $brandRepo)
+    {
+        $this->viewRenderer = $viewRenderer
+            ->withController($this)
+            ->withCsrf();
+
+        $this->responseFactory = $responseFactory;
+        $this->brandRepo = $brandRepo;
+    }
 
     /**
      * @param SubscriberCounter $subscriberCounter
@@ -36,11 +66,11 @@ class DefaultController extends WebController
      */
     public function index(SubscriberCounter $subscriberCounter, TemplateTypeProvider $templateTypeProvider): Response
     {
-        $dataReader = $this->getBrandRepository()
+        $dataReader = $this->brandRepo
             ->getDataReader()
             ->withSort((new Sort([]))->withOrderString('name'));
 
-        return $this->render('index', compact('dataReader', 'subscriberCounter', 'templateTypeProvider'));
+        return $this->viewRenderer->render('index', compact('dataReader', 'subscriberCounter', 'templateTypeProvider'));
     }
 
     /**
@@ -50,11 +80,11 @@ class DefaultController extends WebController
     public function view(Request $request): Response
     {
         $brandId = $request->getAttribute('id');
-        if (empty($brandId) || ($brand = $this->getBrandRepository()->findByPK($brandId)) === null) {
-            return $this->getResponseFactory()->createResponse(404);
+        if (empty($brandId) || ($brand = $this->brandRepo->findByPK($brandId)) === null) {
+            return $this->responseFactory->createResponse(404);
         }
 
-        return $this->render('view', compact('brand'));
+        return $this->viewRenderer->render('view', compact('brand'));
     }
 
     /**
@@ -78,11 +108,13 @@ class DefaultController extends WebController
             $brandForm->loadFromServerRequest($request);
 
             if ($brandForm->save() !== null) {
-                return $this->redirect($urlGenerator->generate('/brand/default/index'));
+                return $this->responseFactory
+                    ->createResponse(302)
+                    ->withHeader('Location', $urlGenerator->generate('/brand/default/index'));
             }
         }
 
-        return $this->render('create', compact('brandForm', 'submitted'));
+        return $this->viewRenderer->render('create', compact('brandForm', 'submitted'));
     }
 
     /**
@@ -94,8 +126,8 @@ class DefaultController extends WebController
     public function edit(Request $request, BrandForm $brandForm, UrlGenerator $urlGenerator): Response
     {
         $brandId = $request->getAttribute('id');
-        if (empty($brandId) || ($brand = $this->getBrandRepository()->findByPK($brandId)) === null) {
-            return $this->getResponseFactory()->createResponse(404);
+        if (empty($brandId) || ($brand = $this->brandRepo->findByPK($brandId)) === null) {
+            return $this->responseFactory->createResponse(404);
         }
 
         $brandForm
@@ -112,11 +144,13 @@ class DefaultController extends WebController
             $brandForm->loadFromServerRequest($request);
 
             if ($brandForm->save() !== null) {
-                return $this->redirect($urlGenerator->generate('/brand/default/index'));
+                return $this->responseFactory
+                    ->createResponse(302)
+                    ->withHeader('Location', $urlGenerator->generate('/brand/default/index'));
             }
         }
 
-        return $this->render('edit', compact('brand', 'brandForm', 'submitted'));
+        return $this->viewRenderer->render('edit', compact('brand', 'brandForm', 'submitted'));
     }
 
     /**
@@ -128,20 +162,14 @@ class DefaultController extends WebController
     public function delete(Request $request, BrandService $brandService, UrlGenerator $urlGenerator): Response
     {
         $brandId = $request->getAttribute('id');
-        if (empty($brandId) || ($brand = $this->getBrandRepository()->findByPK($brandId)) === null) {
-            return $this->getResponseFactory()->createResponse(404);
+        if (empty($brandId) || ($brand = $this->brandRepo->findByPK($brandId)) === null) {
+            return $this->responseFactory->createResponse(404);
         }
 
         $brandService->delete($brand);
 
-        return $this->redirect($urlGenerator->generate('/brand/default/index'));
-    }
-
-    /**
-     * @return BrandRepository
-     */
-    private function getBrandRepository(): BrandRepository
-    {
-        return $this->getOrm()->getRepository(Brand::class);
+        return $this->responseFactory
+            ->createResponse(302)
+            ->withHeader('Location', $urlGenerator->generate('/brand/default/index'));
     }
 }
