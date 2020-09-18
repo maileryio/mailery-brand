@@ -8,7 +8,7 @@ use Mailery\Widget\Link\Link;
 
 /** @var Mailery\Web\View\WebView $this */
 /** @var Mailery\Subscriber\Counter\SubscriberCounter $subscriberCounter /
-/** @var Mailery\Template\Provider\TemplateTypeProvider $templateTypeProvider /
+/** @var Mailery\Template\Model\TemplateTypeList $templateTypes /
 /** @var Yiisoft\Aliases\Aliases $aliases */
 /** @var Yiisoft\I18n\TranslatorInterface $translator */
 /** @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator */
@@ -72,7 +72,7 @@ $this->setTitle('My Brands');
                     </div>
                     <div class="card-body h-50 bg-light border-top">
                         <ul class="list-unstyled">
-                            <?php foreach ($templateTypeProvider->withBrand($brand)->getTypes() as $templateType) {
+                            <?php foreach ($templateTypes as $templateType) {
                                 $icon = Icon::widget()->name('check-circle')->options(['class' => 'text-success']);
                                 echo '<li>' . $icon . ' ' . $templateType->getLabel() . '</li>';
                             } ?>

@@ -21,7 +21,7 @@ use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Http\Method;
 use Yiisoft\Router\UrlGeneratorInterface as UrlGenerator;
 use Mailery\Brand\Service\BrandService;
-use Mailery\Template\Provider\TemplateTypeProvider;
+use Mailery\Template\Model\TemplateTypeList;
 use Mailery\Web\ViewRenderer;
 use Psr\Http\Message\ResponseFactoryInterface as ResponseFactory;
 
@@ -61,16 +61,16 @@ class DefaultController
 
     /**
      * @param SubscriberCounter $subscriberCounter
-     * @param TemplateTypeProvider $templateTypeProvider
+     * @param TemplateTypeList $templateTypes
      * @return Response
      */
-    public function index(SubscriberCounter $subscriberCounter, TemplateTypeProvider $templateTypeProvider): Response
+    public function index(SubscriberCounter $subscriberCounter, TemplateTypeList $templateTypes): Response
     {
         $dataReader = $this->brandRepo
             ->getDataReader()
             ->withSort((new Sort([]))->withOrder(['id' => 'DESC']));
 
-        return $this->viewRenderer->render('index', compact('dataReader', 'subscriberCounter', 'templateTypeProvider'));
+        return $this->viewRenderer->render('index', compact('dataReader', 'subscriberCounter', 'templateTypes'));
     }
 
     /**
