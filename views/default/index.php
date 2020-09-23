@@ -6,7 +6,7 @@ use Mailery\Brand\Entity\Brand;
 use Mailery\Icon\Icon;
 use Mailery\Widget\Link\Link;
 
-/** @var Mailery\Web\View\WebView $this */
+/** @var Yiisoft\Yii\WebView $this */
 /** @var Mailery\Subscriber\Counter\SubscriberCounter $subscriberCounter /
 /** @var Mailery\Template\Model\TemplateTypeList $templateTypes /
 /** @var Yiisoft\Aliases\Aliases $aliases */

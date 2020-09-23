@@ -5,7 +5,7 @@ use Mailery\Icon\Icon;
 use Mailery\Widget\Dataview\DetailView;
 use Mailery\Widget\Link\Link;
 
-/** @var Mailery\Web\View\WebView $this */
+/** @var Yiisoft\Yii\WebView $this */
 /** @var Psr\Http\Message\ServerRequestInterface $request */
 /** @var \Mailery\Brand\Entity\Brand $brand */
 /** @var string $csrf */
