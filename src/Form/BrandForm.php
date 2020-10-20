@@ -32,7 +32,7 @@ class BrandForm extends Form
     /**
      * @var Brand|null
      */
-    private ?Brand $brand;
+    private ?Brand $brand = null;
 
     /**
      * @var BrandService
