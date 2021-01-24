@@ -10,7 +10,7 @@ use Mailery\Widget\Link\Link;
 /** @var Mailery\Subscriber\Counter\SubscriberCounter $subscriberCounter /
 /** @var Mailery\Template\Model\TemplateTypeList $templateTypes /
 /** @var Yiisoft\Aliases\Aliases $aliases */
-/** @var Yiisoft\I18n\TranslatorInterface $translator */
+/** @var Yiisoft\Translator\TranslatorInterface $translator */
 /** @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator */
 /** @var Yiisoft\Data\Reader\DataReaderInterface $dataReader*/
 /** @var string $csrf */

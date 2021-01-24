@@ -43,14 +43,15 @@ class BrandUrlGenerator implements UrlGeneratorInterface
 
     /**
      * @param BrandLocator $brandLocator
+     * @param RouteCollectionInterface $routeCollection
      * @param UrlMatcherInterface $matcher
      * @param RouteParser|null $parser
      */
-    public function __construct(BrandLocator $brandLocator, UrlMatcherInterface $matcher, RouteParser $parser = null)
+    public function __construct(BrandLocator $brandLocator, RouteCollectionInterface $routeCollection, UrlMatcherInterface $matcher, RouteParser $parser = null)
     {
         $this->brandLocator = $brandLocator;
-        $this->urlGenerator = new UrlGenerator($matcher, $parser);
-        $this->routeCollection = $matcher->getRouteCollection();
+        $this->urlGenerator = new UrlGenerator($routeCollection, $matcher, $parser);
+        $this->routeCollection = $routeCollection;
         $this->routeParser = $parser ?? new RouteParser\Std();
     }
 
