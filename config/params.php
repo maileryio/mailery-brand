@@ -39,7 +39,7 @@ return [
                     ->withLabel('Dashboard')
                     ->withIcon('dashboard')
                     ->withUrl(new SerializableClosure(function (UrlGeneratorInterface $urlGenerator) {
-                        return $urlGenerator->generate('/');
+                        return $urlGenerator->generate('/default/index');
                     }))
                     ->withOrder(100),
             ],
