@@ -68,7 +68,7 @@ class DefaultController
     {
         $dataReader = $this->brandRepo
             ->getDataReader()
-            ->withSort((new Sort([]))->withOrder(['id' => 'DESC']));
+            ->withSort(Sort::only(['id'])->withOrder(['id' => 'DESC']));
 
         return $this->viewRenderer->render('index', compact('dataReader', 'subscriberCounter', 'templateTypes'));
     }
