@@ -11,8 +11,6 @@ declare(strict_types=1);
  */
 
 use Mailery\Brand\Middleware\BrandRequiredMiddleware;
-use Mailery\Menu\MenuItem;
-use Opis\Closure\SerializableClosure;
 use Yiisoft\Router\UrlGeneratorInterface;
 
 return [
@@ -22,26 +20,30 @@ return [
         ],
     ],
 
-    'menu' => [
-        'navbar' => [
-            'items' => [
-                'brands' => (new MenuItem())
-                    ->withLabel('My brands')
-                    ->withUrl(new SerializableClosure(function (UrlGeneratorInterface $urlGenerator) {
-                        return $urlGenerator->generate('/brand/default/index');
-                    }))
-                    ->withOrder(200),
+    'maileryio/mailery-menu-navbar' => [
+        'items' => [
+            'brands' => [
+                'label' => static function () {
+                    return 'My brands';
+                },
+                'url' => static function (UrlGeneratorInterface $urlGenerator) {
+                    return $urlGenerator->generate('/brand/default/index');
+                },
+                'order' => 200,
             ],
         ],
-        'sidebar' => [
-            'items' => [
-                'dashboard' => (new MenuItem())
-                    ->withLabel('Dashboard')
-                    ->withIcon('dashboard')
-                    ->withUrl(new SerializableClosure(function (UrlGeneratorInterface $urlGenerator) {
-                        return $urlGenerator->generate('/default/index');
-                    }))
-                    ->withOrder(100),
+    ],
+    'maileryio/mailery-menu-sidebar' => [
+        'items' => [
+            'dashboard' => [
+                'label' => static function () {
+                    return 'Dashboard';
+                },
+                'icon' => 'dashboard',
+                'url' => static function (UrlGeneratorInterface $urlGenerator) {
+                    return $urlGenerator->generate('/default/index');
+                },
+                'order' => 100,
             ],
         ],
     ],
