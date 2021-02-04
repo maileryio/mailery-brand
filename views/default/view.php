@@ -25,6 +25,7 @@ $this->setTitle($brand->getName());
                     ->confirm('Are you sure?')
                     ->options([
                         'class' => 'btn btn-sm btn-danger mx-sm-1 mb-2',
+                        'encode' => false,
                     ]);
                 ?>
                 <a class="btn btn-sm btn-secondary mx-sm-1 mb-2" href="<?= $urlGenerator->generate('/brand/default/edit', ['id' => $brand->getId()]); ?>">
