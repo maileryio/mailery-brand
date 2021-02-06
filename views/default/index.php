@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 
 use Mailery\Activity\Log\Widget\ActivityLogLink;
+use Mailery\Channel\ChannelInterface;
 use Mailery\Brand\Module;
 use Mailery\Brand\Entity\Brand;
 use Mailery\Icon\Icon;
@@ -8,7 +9,7 @@ use Mailery\Widget\Link\Link;
 
 /** @var Yiisoft\Yii\WebView $this */
 /** @var Mailery\Subscriber\Counter\SubscriberCounter $subscriberCounter /
-/** @var Mailery\Template\Model\TemplateTypeList $templateTypes /
+/** @var Mailery\Channel\Model\ChannelList $channelList /
 /** @var Yiisoft\Aliases\Aliases $aliases */
 /** @var Yiisoft\Translator\TranslatorInterface $translator */
 /** @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator */
@@ -32,20 +33,20 @@ $this->setTitle('My Brands');
     foreach ($dataReader->read() as $brand) {
         /* @var $brand Brand */
         $subscriberCounter = $subscriberCounter->withBrand($brand);
-        $editUrl = $urlGenerator->generate('/brand/default/edit', ['id' => $brand->getId()]);
+        $settingsUrl = $urlGenerator->generate('/brand/settings/basic', ['brandId' => $brand->getId()]);
         $dashboardUrl = $urlGenerator->generate('/dashboard/default/index', ['brandId' => $brand->getId()]); ?><div class="col-md-6 col-lg-4">
             <ui-brand-card>
                 <template v-slot:dropdown-button-content>
                     <?= Icon::widget()->name('chevron-down')->options(['class' => 'text-body h4']); ?>
                 </template>
                 <template v-slot:dropdown-button-items>
-                    <b-dropdown-item href="<?= $editUrl; ?>">Edit</b-dropdown-item>
                     <b-dropdown-item href="<?= $dashboardUrl; ?>">Dashboard</b-dropdown-item>
                     <?= ActivityLogLink::widget()
                         ->entity($brand)
                         ->tag('b-dropdown-item')
                         ->label('Activity log')
                         ->module(Module::NAME); ?>
+                    <b-dropdown-item href="<?= $settingsUrl; ?>">Settings</b-dropdown-item>
                     <b-dropdown-divider></b-dropdown-divider>
                     <b-dropdown-text variant="danger" class="dropdown-item-custom-link"><?= Link::widget()
                         ->label('Delete brand')
@@ -72,9 +73,16 @@ $this->setTitle('My Brands');
                     </div>
                     <div class="card-body h-50 bg-light border-top">
                         <ul class="list-unstyled">
-                            <?php foreach ($templateTypes as $templateType) {
-                                $icon = Icon::widget()->name('check-circle')->options(['class' => 'text-success']);
-                                echo '<li>' . $icon . ' ' . $templateType->getLabel() . '</li>';
+                            <?php foreach ($channelList as $channel) {
+                                /** @var ChannelInterface $channel */
+                                $iconCssClass = 'text-secondary';
+
+                                if (in_array($channel->getKey(), $brand->getChannels())) {
+                                    $iconCssClass = 'text-success';
+                                }
+
+                                $icon = Icon::widget()->name('check-circle')->options(['class' => $iconCssClass]);
+                                echo '<li>' . $icon . ' ' . $channel->getLabel() . '</li>';
                             } ?>
                         </ul>
                     </div>

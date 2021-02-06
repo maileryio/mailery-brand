@@ -12,52 +12,74 @@ declare(strict_types=1);
 
 namespace Mailery\Brand\Form;
 
-use Cycle\ORM\ORMInterface;
-use FormManager\Factory as F;
-use FormManager\Form;
 use Mailery\Brand\Entity\Brand;
+use Yiisoft\Form\FormModel;
+use Yiisoft\Form\HtmlOptions\RequiredHtmlOptions;
+use Yiisoft\Form\HtmlOptions\HasLengthHtmlOptions;
+use Yiisoft\Validator\Result;
+use Yiisoft\Validator\Rule\Required;
+use Yiisoft\Validator\Rule\Callback;
+use Yiisoft\Validator\Rule\HasLength;
+use Yiisoft\Validator\Rule\InRange;
 use Mailery\Brand\Repository\BrandRepository;
-use Symfony\Component\Validator\Constraints;
-use Symfony\Component\Validator\Context\ExecutionContextInterface;
-use Mailery\Brand\Service\BrandService;
-use Mailery\Brand\ValueObject\BrandValueObject;
+use Mailery\Channel\Model\ChannelList;
+use Mailery\Channel\ChannelInterface;
 
-class BrandForm extends Form
+class BrandForm extends FormModel
 {
     /**
-     * @var ORMInterface
+     * @var string|null
      */
-    private ORMInterface $orm;
+    private ?string $name = null;
 
     /**
-     * @var Brand|null
+     * @var string|null
+     */
+    private ?string $description = null;
+
+    /**
+     * @var array
+     */
+    private array $channels = [];
+
+    /**
+     * @var Brand
      */
     private ?Brand $brand = null;
 
     /**
-     * @var BrandService
+     * @var BrandRepository
      */
-    private BrandService $brandService;
+    private BrandRepository $brandRepo;
 
     /**
-     * {@inheritdoc}
+     * @var ChannelList
      */
-    public function __construct(BrandService $brandService, ORMInterface $orm)
+    private ChannelList $channelList;
+
+    /**
+     * @param BrandRepository $brandRepo
+     * @param ChannelList $channelList
+     */
+    public function __construct(BrandRepository $brandRepo, ChannelList $channelList)
     {
-        $this->orm = $orm;
-        $this->brandService = $brandService;
-        parent::__construct($this->inputs());
+        $this->brandRepo = $brandRepo;
+        $this->channelList = $channelList;
+        parent::__construct();
     }
 
     /**
-     * @param string $csrf
-     * @return \self
+     * @param string $name
+     * @param type $value
+     * @return void
      */
-    public function withCsrf(string $value, string $name = '_csrf'): self
+    public function setAttribute(string $name, $value): void
     {
-        $this->offsetSet($name, F::hidden($value));
-
-        return $this;
+        if ($name === 'channels') {
+            $this->$name = array_filter((array) $value);
+        } else {
+            parent::setAttribute($name, $value);
+        }
     }
 
     /**
@@ -66,75 +88,73 @@ class BrandForm extends Form
      */
     public function withBrand(Brand $brand): self
     {
-        $this->brand = $brand;
-        $this->offsetSet('', F::submit('Update'));
+        $new = clone $this;
+        $new->brand = $brand;
+        $new->name = $brand->getName();
+        $new->description = $brand->getDescription();
+        $new->channels = $brand->getChannels();
 
-        $this['name']->setValue($brand->getName());
-        $this['description']->setValue($brand->getDescription());
-
-        return $this;
-    }
-
-    /**
-     * @return Brand|null
-     */
-    public function save(): ?Brand
-    {
-        if (!$this->isValid()) {
-            return null;
-        }
-
-        $valueObject = BrandValueObject::fromForm($this);
-
-        if (($brand = $this->brand) === null) {
-            $brand = $this->brandService->create($valueObject);
-        } else {
-            $brand = $this->brandService->update($brand, $valueObject);
-        }
-
-        return $brand;
+        return $new;
     }
 
     /**
      * @return array
      */
-    private function inputs(): array
+    public function attributeLabels(): array
     {
-        $nameConstraint = new Constraints\Callback([
-            'callback' => function ($value, ExecutionContextInterface $context) {
-                if (empty($value)) {
-                    return;
-                }
-
-                $brand = $this->getBrandRepository()->findByName($value, $this->brand);
-                if ($brand !== null) {
-                    $context->buildViolation('This brand name already exists.')
-                        ->atPath('name')
-                        ->addViolation();
-                }
-            },
-        ]);
-
         return [
-            'name' => F::text('Brand name', ['minlength' => 4, 'maxlength' => 32])
-                ->addConstraint(new Constraints\NotBlank())
-                ->addConstraint(new Constraints\Length([
-                    'min' => 4,
-                    'max' => 32,
-                ]))
-                ->addConstraint($nameConstraint),
-            'description' => F::textarea('Description')
-                ->addConstraint(new Constraints\NotBlank()),
-
-            '' => F::submit($this->user === null ? 'Create' : 'Update'),
+            'name' => 'Brand name',
+            'description' => 'Description (optional)',
+            'channels' => 'Channels for this brand',
         ];
     }
 
     /**
-     * @return BrandRepository
+     * @return string
      */
-    private function getBrandRepository(): BrandRepository
+    public function formName(): string
     {
-        return $this->orm->getRepository(Brand::class);
+        return 'BrandForm';
+    }
+
+    /**
+     * @return array
+     */
+    public function rules(): array
+    {
+        return [
+            'name' => [
+                new RequiredHtmlOptions(new Required()),
+                new HasLengthHtmlOptions((new HasLength())->min(4)->max(32)),
+                new Callback(function ($value) {
+                    $result = new Result();
+                    $brand = $this->brandRepo->findByName($value, $this->brand);
+
+                    if ($brand !== null) {
+                        $result->addError('This brand name already exists.');
+                    }
+
+                    return $result;
+                })
+            ],
+            'channels' => [
+                new RequiredHtmlOptions(new Required()),
+                new InRange(array_keys($this->getChannelListOptions())),
+            ],
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function getChannelListOptions(): array
+    {
+        $listOptions = [];
+        foreach ($this->channelList as $channel) {
+            /** @var ChannelInterface $channel */
+            $listOptions[$channel->getKey()] = $channel->getLabel();
+        }
+
+        return $listOptions;
     }
 }

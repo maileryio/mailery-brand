@@ -19,16 +19,17 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Http\Method;
+use Yiisoft\Http\Status;
+use Yiisoft\Http\Header;
 use Yiisoft\Router\UrlGeneratorInterface as UrlGenerator;
-use Mailery\Brand\Service\BrandService;
-use Mailery\Template\Model\TemplateTypeList;
+use Mailery\Brand\Service\BrandCrudService;
+use Mailery\Channel\Model\ChannelList;
 use Yiisoft\Yii\View\ViewRenderer;
 use Psr\Http\Message\ResponseFactoryInterface as ResponseFactory;
+use Yiisoft\Validator\ValidatorInterface;
 
 class DefaultController
 {
-    private const PAGINATION_INDEX = 10;
-
     /**
      * @var ViewRenderer
      */
@@ -40,133 +41,93 @@ class DefaultController
     private ResponseFactory $responseFactory;
 
     /**
+     * @var UrlGenerator
+     */
+    private UrlGenerator $urlGenerator;
+
+    /**
      * @var BrandRepository
      */
     private BrandRepository $brandRepo;
 
     /**
+     * @var BrandCrudService
+     */
+    private BrandCrudService $BrandCrudService;
+
+    /**
      * @param ViewRenderer $viewRenderer
      * @param ResponseFactory $responseFactory
+     * @param UrlGenerator $urlGenerator
      * @param BrandRepository $brandRepo
+     * @param BrandCrudService $BrandCrudService
      */
-    public function __construct(ViewRenderer $viewRenderer, ResponseFactory $responseFactory, BrandRepository $brandRepo)
-    {
+    public function __construct(
+        ViewRenderer $viewRenderer,
+        ResponseFactory $responseFactory,
+        UrlGenerator $urlGenerator,
+        BrandRepository $brandRepo,
+        BrandCrudService $BrandCrudService
+    ) {
         $this->viewRenderer = $viewRenderer
             ->withController($this)
             ->withViewBasePath(dirname(dirname(__DIR__)) . '/views');
 
         $this->responseFactory = $responseFactory;
+        $this->urlGenerator = $urlGenerator;
         $this->brandRepo = $brandRepo;
+        $this->BrandCrudService = $BrandCrudService;
     }
 
     /**
      * @param SubscriberCounter $subscriberCounter
-     * @param TemplateTypeList $templateTypes
+     * @param ChannelList $channelList
      * @return Response
      */
-    public function index(SubscriberCounter $subscriberCounter, TemplateTypeList $templateTypes): Response
+    public function index(SubscriberCounter $subscriberCounter, ChannelList $channelList): Response
     {
         $dataReader = $this->brandRepo
             ->getDataReader()
             ->withSort(Sort::only(['id'])->withOrder(['id' => 'DESC']));
 
-        return $this->viewRenderer->render('index', compact('dataReader', 'subscriberCounter', 'templateTypes'));
+        return $this->viewRenderer->render('index', compact('dataReader', 'subscriberCounter', 'channelList'));
     }
 
     /**
      * @param Request $request
+     * @param ValidatorInterface $validator
+     * @param BrandForm $form
      * @return Response
      */
-    public function view(Request $request): Response
+    public function create(Request $request, ValidatorInterface $validator, BrandForm $form): Response
+    {
+        $body = $request->getParsedBody();
+
+        if (($request->getMethod() === Method::POST) && $form->load($body) && $form->validate($validator)) {
+            $this->BrandCrudService->create($form);
+
+            return $this->responseFactory
+                ->createResponse(Status::FOUND)
+                ->withHeader(Header::LOCATION, $this->urlGenerator->generate('/brand/default/index'));
+        }
+
+        return $this->viewRenderer->render('create', compact('form'));
+    }
+
+    /**
+     * @param Request $request
+     * @param BrandCrudService $BrandCrudService
+     * @param UrlGenerator $urlGenerator
+     * @return Response
+     */
+    public function delete(Request $request, BrandCrudService $BrandCrudService, UrlGenerator $urlGenerator): Response
     {
         $brandId = $request->getAttribute('id');
         if (empty($brandId) || ($brand = $this->brandRepo->findByPK($brandId)) === null) {
             return $this->responseFactory->createResponse(404);
         }
 
-        return $this->viewRenderer->render('view', compact('brand'));
-    }
-
-    /**
-     * @param Request $request
-     * @param BrandForm $brandForm
-     * @param UrlGenerator $urlGenerator
-     * @return Response
-     */
-    public function create(Request $request, BrandForm $brandForm, UrlGenerator $urlGenerator): Response
-    {
-        $brandForm
-            ->setAttributes([
-                'action' => $request->getUri()->getPath(),
-                'method' => 'post',
-                'enctype' => 'multipart/form-data',
-            ]);
-
-        $submitted = $request->getMethod() === Method::POST;
-
-        if ($submitted) {
-            $brandForm->loadFromServerRequest($request);
-
-            if ($brandForm->save() !== null) {
-                return $this->responseFactory
-                    ->createResponse(302)
-                    ->withHeader('Location', $urlGenerator->generate('/brand/default/index'));
-            }
-        }
-
-        return $this->viewRenderer->render('create', compact('brandForm', 'submitted'));
-    }
-
-    /**
-     * @param Request $request
-     * @param BrandForm $brandForm
-     * @param UrlGenerator $urlGenerator
-     * @return Response
-     */
-    public function edit(Request $request, BrandForm $brandForm, UrlGenerator $urlGenerator): Response
-    {
-        $brandId = $request->getAttribute('id');
-        if (empty($brandId) || ($brand = $this->brandRepo->findByPK($brandId)) === null) {
-            return $this->responseFactory->createResponse(404);
-        }
-
-        $brandForm
-            ->withBrand($brand)
-            ->setAttributes([
-                'action' => $request->getUri()->getPath(),
-                'method' => 'post',
-                'enctype' => 'multipart/form-data',
-            ]);
-
-        $submitted = $request->getMethod() === Method::POST;
-
-        if ($submitted) {
-            $brandForm->loadFromServerRequest($request);
-
-            if ($brandForm->save() !== null) {
-                return $this->responseFactory
-                    ->createResponse(302)
-                    ->withHeader('Location', $urlGenerator->generate('/brand/default/index'));
-            }
-        }
-
-        return $this->viewRenderer->render('edit', compact('brand', 'brandForm', 'submitted'));
-    }
-
-    /**
-     * @param Request $request
-     * @param BrandService $brandService
-     * @param UrlGenerator $urlGenerator
-     * @return Response
-     */
-    public function delete(Request $request, BrandService $brandService, UrlGenerator $urlGenerator): Response
-    {
-        $brandId = $request->getAttribute('id');
-        if (empty($brandId) || ($brand = $this->brandRepo->findByPK($brandId)) === null) {
-            return $this->responseFactory->createResponse(404);
-        }
-
-        $brandService->delete($brand);
+        $BrandCrudService->delete($brand);
 
         return $this->responseFactory
             ->createResponse(302)

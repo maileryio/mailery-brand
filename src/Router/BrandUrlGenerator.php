@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Mailery\Brand\Router;
 
 use FastRoute\RouteParser;
-use Mailery\Brand\Service\BrandLocator;
+use Mailery\Brand\BrandLocatorInterface as BrandLocator;
 use Yiisoft\Router\FastRoute\UrlGenerator;
 use Yiisoft\Router\RouteCollectionInterface;
 use Yiisoft\Router\UrlGeneratorInterface;

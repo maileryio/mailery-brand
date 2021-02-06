@@ -24,14 +24,17 @@
         "maileryio/mailery-activity-log": "dev-master",
         "maileryio/mailery-common": "dev-master",
         "maileryio/mailery-menu": "dev-master",
+        "maileryio/mailery-user": "^1.0@dev",
         "maileryio/mailery-web": "dev-master",
         "maileryio/widget-dataview": "dev-master",
         "maileryio/widget-form": "dev-master",
         "maileryio/widget-link": "dev-master",
         "opis/closure": "^3.5",
+        "yiisoft/form": "^1.0@dev",
         "yiisoft/router": "^3.0@dev",
         "yiisoft/view": "^3.0@dev",
-        "yiisoft/yii-cycle": "^3.0@dev"
+        "yiisoft/yii-cycle": "^3.0@dev",
+        "yiisoft/yii-widgets": "^3.0@dev"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^2.16",

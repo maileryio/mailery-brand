@@ -13,11 +13,17 @@ declare(strict_types=1);
 use Cycle\ORM\ORMInterface;
 use Mailery\Brand\Middleware\BrandRequiredMiddleware;
 use Mailery\Brand\Router\BrandUrlGenerator;
-use Mailery\Brand\Service\BrandLocator;
-use Mailery\Brand\Service\BrandLocatorInterface;
+use Mailery\Brand\BrandLocator;
+use Mailery\Brand\BrandLocatorInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Yiisoft\Router\UrlGeneratorInterface;
+use Mailery\Menu\Menu;
+use Mailery\Menu\Decorator\Normalizer;
+use Mailery\Menu\Decorator\Instantiator;
+use Mailery\Menu\Decorator\Sorter;
+use Mailery\Brand\Menu\SettingsMenu;
+use Yiisoft\Injector\Injector;
 
 return [
     UrlGeneratorInterface::class => BrandUrlGenerator::class,
@@ -35,5 +41,13 @@ return [
 
         return (new BrandRequiredMiddleware($responseFactory, $urlGenerator, $brandLocator))
             ->toRoute('/brand/default/index');
+    },
+    SettingsMenu::class => static function (Injector $injector) use($params) {
+        return new SettingsMenu(
+            (new Menu($params['maileryio/mailery-brand']['settings-menu']['items']))
+                ->withNormalizer(new Normalizer($injector))
+                ->withInstantiator(new Instantiator($injector))
+                ->withSorter(new Sorter())
+        );
     },
 ];

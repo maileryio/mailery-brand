@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Mailery\Brand\Middleware;
 
 use Mailery\Brand\Exception\BrandRequiredException;
-use Mailery\Brand\Service\BrandLocator;
+use Mailery\Brand\BrandLocatorInterface as BrandLocator;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;

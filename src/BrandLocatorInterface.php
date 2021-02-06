@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @copyright Copyright (c) 2020, Mailery (https://mailery.io/)
  */
 
-namespace Mailery\Brand\Service;
+namespace Mailery\Brand;
 
 use Mailery\Brand\Entity\Brand;
 

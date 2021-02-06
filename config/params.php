@@ -29,10 +29,10 @@ return [
                 'url' => static function (UrlGeneratorInterface $urlGenerator) {
                     return $urlGenerator->generate('/brand/default/index');
                 },
-                'order' => 200,
             ],
         ],
     ],
+
     'maileryio/mailery-menu-sidebar' => [
         'items' => [
             'dashboard' => [
@@ -43,7 +43,30 @@ return [
                 'url' => static function (UrlGeneratorInterface $urlGenerator) {
                     return $urlGenerator->generate('/default/index');
                 },
-                'order' => 100,
+            ],
+            'settings' => [
+                'label' => static function () {
+                    return 'Settings';
+                },
+                'icon' => 'settings',
+                'url' => static function (UrlGeneratorInterface $urlGenerator) {
+                    return $urlGenerator->generate('/brand/settings/basic');
+                },
+            ],
+        ],
+    ],
+
+    'maileryio/mailery-brand' => [
+        'settings-menu' => [
+            'items' => [
+                'general' => [
+                    'label' => static function () {
+                        return 'General';
+                    },
+                    'url' => static function (UrlGeneratorInterface $urlGenerator) {
+                        return $urlGenerator->generate('/brand/settings/basic');
+                    },
+                ],
             ],
         ],
     ],

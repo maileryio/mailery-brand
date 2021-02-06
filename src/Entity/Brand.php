@@ -28,8 +28,6 @@ class Brand implements RoutableEntityInterface, LoggableEntityInterface
 {
     use LoggableEntityTrait;
 
-    const PASSWORD_RESET_TOKEN_EXPIRE = 3600;
-
     /**
      * @Cycle\Annotated\Annotation\Column(type = "primary")
      * @var int|null
@@ -47,6 +45,12 @@ class Brand implements RoutableEntityInterface, LoggableEntityInterface
      * @var string
      */
     private $description;
+
+    /**
+     * @Cycle\Annotated\Annotation\Column(type = "json")
+     * @var string
+     */
+    private $channels;
 
     /**
      * @return string
@@ -109,6 +113,35 @@ class Brand implements RoutableEntityInterface, LoggableEntityInterface
     public function setDescription(string $description): self
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getChannels(): array
+    {
+        $channels = json_decode($this->channels, true);
+        if (!is_array($channels)) {
+            return [];
+        }
+
+        return $channels;
+    }
+
+    /**
+     * @param array $channels
+     * @return self
+     */
+    public function setChannels(array $channels): self
+    {
+        $jsonString = json_encode($channels);
+        if ($jsonString === false) {
+            $jsonString = '[]';
+        }
+
+        $this->channels = $jsonString;
 
         return $this;
     }
