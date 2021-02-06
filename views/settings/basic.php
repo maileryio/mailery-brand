@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
+use Mailery\Web\Widget\FlashMessage;
 use Yiisoft\Form\Widget\Form;
 use Yiisoft\Html\Html;
-use Mailery\Web\Widget\FlashMessage;
-use Mailery\Brand\Widget\SettingsContent;
+use Yiisoft\Yii\Widgets\ContentDecorator;
 
 /** @var Yiisoft\Yii\WebView $this */
 /** @var Psr\Http\Message\ServerRequestInterface $request */
@@ -12,7 +12,9 @@ use Mailery\Brand\Widget\SettingsContent;
 /** @var string $csrf */
 ?>
 
-<?= SettingsContent::widget()->begin(); ?>
+<?= ContentDecorator::widget()
+    ->viewFile('@vendor/maileryio/mailery-brand/views/settings/_layout.php')
+    ->begin(); ?>
 
 <div class="mb-5"></div>
 <div class="row">
@@ -54,4 +56,4 @@ use Mailery\Brand\Widget\SettingsContent;
     </div>
 </div>
 
-<?= SettingsContent::end() ?>
+<?= ContentDecorator::end() ?>

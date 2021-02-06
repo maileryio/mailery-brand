@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-use Yiisoft\Yii\Bootstrap4\Nav;
+use Mailery\Brand\Widget\SettingsMenuWidget;
 
 /** @var Yiisoft\Yii\WebView $this */
 /** @var Psr\Http\Message\ServerRequestInterface $request */
@@ -26,27 +26,7 @@ $this->setTitle('Settings');
 <div class="mb-2"></div>
 <div class="row">
     <div class="col">
-        <?= Nav::widget()
-            ->options([
-                'class' => 'nav nav-pills',
-                'encode' => false,
-            ])
-            ->currentPath(
-                $urlMatcher->getCurrentUri()->getPath()
-            )
-            ->items(array_map(
-                function (array $item) {
-                    return array_merge(
-                        $item,
-                        [
-                            'options' => [
-                                'encode' => false,
-                            ],
-                        ]
-                    );
-                },
-                $settingsMenu->getItems()
-            )); ?>
+        <?= SettingsMenuWidget::widget(); ?>
     </div>
 </div>
 

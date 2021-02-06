@@ -24,7 +24,7 @@
         "maileryio/mailery-activity-log": "dev-master",
         "maileryio/mailery-common": "dev-master",
         "maileryio/mailery-menu": "dev-master",
-        "maileryio/mailery-user": "^1.0@dev",
+        "maileryio/mailery-user": "dev-master",
         "maileryio/mailery-web": "dev-master",
         "maileryio/widget-dataview": "dev-master",
         "maileryio/widget-form": "dev-master",
