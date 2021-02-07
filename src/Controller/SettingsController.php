@@ -15,6 +15,7 @@ namespace Mailery\Brand\Controller;
 use Mailery\Brand\Form\BrandForm;
 use Mailery\Brand\Service\BrandCrudService;
 use Mailery\Brand\BrandLocatorInterface;
+use Mailery\Brand\ValueObject\BrandValueObject;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Yiisoft\Http\Method;
@@ -44,7 +45,7 @@ class SettingsController
     /**
      * @var BrandCrudService
      */
-    private BrandCrudService $BrandCrudService;
+    private BrandCrudService $brandCrudService;
 
     /**
      * @var BrandLocatorInterface
@@ -55,14 +56,14 @@ class SettingsController
      * @param ViewRenderer $viewRenderer
      * @param ResponseFactory $responseFactory
      * @param UrlGenerator $urlGenerator
-     * @param BrandCrudService $BrandCrudService
+     * @param BrandCrudService $brandCrudService
      * @param BrandLocatorInterface $brandLocator
      */
     public function __construct(
         ViewRenderer $viewRenderer,
         ResponseFactory $responseFactory,
         UrlGenerator $urlGenerator,
-        BrandCrudService $BrandCrudService,
+        BrandCrudService $brandCrudService,
         BrandLocatorInterface $brandLocator
     ) {
         $this->viewRenderer = $viewRenderer
@@ -71,7 +72,7 @@ class SettingsController
 
         $this->responseFactory = $responseFactory;
         $this->urlGenerator = $urlGenerator;
-        $this->BrandCrudService = $BrandCrudService;
+        $this->brandCrudService = $brandCrudService;
         $this->brandLocator = $brandLocator;
     }
 
@@ -90,7 +91,8 @@ class SettingsController
         $form = $form->withBrand($brand);
 
         if (($request->getMethod() === Method::POST) && $form->load($body) && $form->validate($validator)) {
-            $this->BrandCrudService->update($brand, $form);
+            $valueObject = BrandValueObject::fromForm($form);
+            $this->brandCrudService->update($brand, $valueObject);
 
             $flash->add(
                 'success',

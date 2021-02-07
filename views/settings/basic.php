@@ -36,12 +36,20 @@ use Yiisoft\Yii\Widgets\ContentDecorator;
             )
             ->begin(); ?>
 
+        <h3 class="h6">General Information</h3>
+        <div class="mb-4"></div>
+
         <?= $field->config($form, 'name'); ?>
         <?= $field->config($form, 'description')
             ->textArea([
                 'class' => 'form-control textarea',
                 'rows' => 2,
             ]); ?>
+
+        <div class="mb-5"></div>
+        <h3 class="h6">Sending Setup</h3>
+        <div class="mb-4"></div>
+
         <?= $field->config($form, 'channels')
             ->checkboxList($form->getChannelListOptions()); ?>
 

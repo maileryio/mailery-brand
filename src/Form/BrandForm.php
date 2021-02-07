@@ -43,6 +43,16 @@ class BrandForm extends FormModel
     private array $channels = [];
 
     /**
+     * @var string|null
+     */
+    private ?string $fromName = null;
+
+    /**
+     * @var string|null
+     */
+    private ?string $fromEmail = null;
+
+    /**
      * @var Brand
      */
     private ?Brand $brand = null;
@@ -105,7 +115,7 @@ class BrandForm extends FormModel
         return [
             'name' => 'Brand name',
             'description' => 'Description (optional)',
-            'channels' => 'Channels for this brand',
+            'channels' => 'Available channels for this brand',
         ];
     }
 

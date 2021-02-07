@@ -35,15 +35,6 @@ return [
 
     'maileryio/mailery-menu-sidebar' => [
         'items' => [
-            'dashboard' => [
-                'label' => static function () {
-                    return 'Dashboard';
-                },
-                'icon' => 'dashboard',
-                'url' => static function (UrlGeneratorInterface $urlGenerator) {
-                    return $urlGenerator->generate('/default/index');
-                },
-            ],
             'settings' => [
                 'label' => static function () {
                     return 'Settings';
@@ -52,6 +43,9 @@ return [
                 'url' => static function (UrlGeneratorInterface $urlGenerator) {
                     return $urlGenerator->generate('/brand/settings/basic');
                 },
+                'activeRouteNames' => [
+                    '/brand/settings/basic',
+                ],
             ],
         ],
     ],

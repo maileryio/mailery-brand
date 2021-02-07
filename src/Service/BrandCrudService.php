@@ -4,6 +4,7 @@ namespace Mailery\Brand\Service;
 
 use Cycle\ORM\ORMInterface;
 use Mailery\Brand\Entity\Brand;
+use Mailery\Brand\ValueObject\BrandValueObject;
 use Yiisoft\Validator\DataSetInterface;
 use Yiisoft\Yii\Cycle\Data\Writer\EntityWriter;
 
@@ -23,15 +24,15 @@ class BrandCrudService
     }
 
     /**
-     * @param DataSetInterface $data
+     * @param BrandValueObject $valueObject
      * @return Brand
      */
-    public function create(DataSetInterface $data): Brand
+    public function create(BrandValueObject $valueObject): Brand
     {
         $brand = (new Brand())
-            ->setName($data->getAttributeValue('name'))
-            ->setDescription($data->getAttributeValue('description'))
-            ->setChannels($data->getAttributeValue('channels'))
+            ->setName($valueObject->getName())
+            ->setDescription($valueObject->getDescription())
+            ->setChannels($valueObject->getChannels())
         ;
 
         (new EntityWriter($this->orm))->write([$brand]);
@@ -41,15 +42,15 @@ class BrandCrudService
 
     /**
      * @param Brand $brand
-     * @param DataSetInterface $data
+     * @param BrandValueObject $valueObject
      * @return Brand
      */
-    public function update(Brand $brand, DataSetInterface $data): Brand
+    public function update(Brand $brand, BrandValueObject $valueObject): Brand
     {
         $brand = $brand
-            ->setName($data->getAttributeValue('name'))
-            ->setDescription($data->getAttributeValue('description'))
-            ->setChannels($data->getAttributeValue('channels'))
+            ->setName($valueObject->getName())
+            ->setDescription($valueObject->getDescription())
+            ->setChannels($valueObject->getChannels())
         ;
 
         (new EntityWriter($this->orm))->write([$brand]);

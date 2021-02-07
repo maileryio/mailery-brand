@@ -14,6 +14,7 @@ namespace Mailery\Brand\Controller;
 
 use Mailery\Brand\Form\BrandForm;
 use Mailery\Brand\Repository\BrandRepository;
+use Mailery\Brand\ValueObject\BrandValueObject;
 use Mailery\Subscriber\Counter\SubscriberCounter;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -53,21 +54,21 @@ class DefaultController
     /**
      * @var BrandCrudService
      */
-    private BrandCrudService $BrandCrudService;
+    private BrandCrudService $brandCrudService;
 
     /**
      * @param ViewRenderer $viewRenderer
      * @param ResponseFactory $responseFactory
      * @param UrlGenerator $urlGenerator
      * @param BrandRepository $brandRepo
-     * @param BrandCrudService $BrandCrudService
+     * @param BrandCrudService $brandCrudService
      */
     public function __construct(
         ViewRenderer $viewRenderer,
         ResponseFactory $responseFactory,
         UrlGenerator $urlGenerator,
         BrandRepository $brandRepo,
-        BrandCrudService $BrandCrudService
+        BrandCrudService $brandCrudService
     ) {
         $this->viewRenderer = $viewRenderer
             ->withController($this)
@@ -76,7 +77,7 @@ class DefaultController
         $this->responseFactory = $responseFactory;
         $this->urlGenerator = $urlGenerator;
         $this->brandRepo = $brandRepo;
-        $this->BrandCrudService = $BrandCrudService;
+        $this->brandCrudService = $brandCrudService;
     }
 
     /**
@@ -104,7 +105,8 @@ class DefaultController
         $body = $request->getParsedBody();
 
         if (($request->getMethod() === Method::POST) && $form->load($body) && $form->validate($validator)) {
-            $this->BrandCrudService->create($form);
+            $valueObject = BrandValueObject::fromForm($form);
+            $this->brandCrudService->create($valueObject);
 
             return $this->responseFactory
                 ->createResponse(Status::FOUND)
@@ -116,18 +118,18 @@ class DefaultController
 
     /**
      * @param Request $request
-     * @param BrandCrudService $BrandCrudService
+     * @param BrandCrudService $brandCrudService
      * @param UrlGenerator $urlGenerator
      * @return Response
      */
-    public function delete(Request $request, BrandCrudService $BrandCrudService, UrlGenerator $urlGenerator): Response
+    public function delete(Request $request, BrandCrudService $brandCrudService, UrlGenerator $urlGenerator): Response
     {
         $brandId = $request->getAttribute('id');
         if (empty($brandId) || ($brand = $this->brandRepo->findByPK($brandId)) === null) {
             return $this->responseFactory->createResponse(404);
         }
 
-        $BrandCrudService->delete($brand);
+        $brandCrudService->delete($brand);
 
         return $this->responseFactory
             ->createResponse(302)
