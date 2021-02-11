@@ -18,13 +18,13 @@ use Yiisoft\Yii\Widgets\ContentDecorator;
 
 <div class="mb-5"></div>
 <div class="row">
-    <div class="col-6">
+    <div class="col-6 col-xl-4">
         <?= FlashMessage::widget(); ?>
     </div>
 </div>
 
 <div class="row">
-    <div class="col-6">
+    <div class="col-6 col-xl-4">
         <?= Form::widget()
             ->action($urlGenerator->generate('/brand/settings/basic'))
             ->options(
