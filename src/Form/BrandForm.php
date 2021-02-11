@@ -43,16 +43,6 @@ class BrandForm extends FormModel
     private array $channels = [];
 
     /**
-     * @var string|null
-     */
-    private ?string $fromName = null;
-
-    /**
-     * @var string|null
-     */
-    private ?string $fromEmail = null;
-
-    /**
      * @var Brand
      */
     private ?Brand $brand = null;

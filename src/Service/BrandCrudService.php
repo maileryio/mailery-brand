@@ -5,7 +5,6 @@ namespace Mailery\Brand\Service;
 use Cycle\ORM\ORMInterface;
 use Mailery\Brand\Entity\Brand;
 use Mailery\Brand\ValueObject\BrandValueObject;
-use Yiisoft\Validator\DataSetInterface;
 use Yiisoft\Yii\Cycle\Data\Writer\EntityWriter;
 
 class BrandCrudService
