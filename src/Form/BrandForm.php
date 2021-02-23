@@ -120,7 +120,7 @@ class BrandForm extends FormModel
     /**
      * @return array
      */
-    public function rules(): array
+    public function getRules(): array
     {
         return [
             'name' => [
