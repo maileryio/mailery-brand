@@ -39,23 +39,11 @@ class SettingsMenuWidget extends Widget
         return Nav::widget()
             ->options([
                 'class' => 'nav nav-pills',
-                'encode' => false,
             ])
             ->currentPath(
                 $this->urlMatcher->getCurrentUri()->getPath()
             )
-            ->items(array_map(
-                function (array $item) {
-                    return array_merge(
-                        $item,
-                        [
-                            'options' => [
-                                'encode' => false,
-                            ],
-                        ]
-                    );
-                },
-                $this->settingsMenu->getItems()
-            ));
+            ->items($this->settingsMenu->getItems())
+            ->render();
     }
 }

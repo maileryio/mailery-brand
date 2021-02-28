@@ -55,7 +55,8 @@ $this->setTitle('My Brands');
                         ->confirm('Are you sure?')
                         ->options([
                             'class' => 'btn btn-link text-decoration-none text-danger',
-                        ]); ?></b-dropdown-text>
+                        ])
+                        ->encode(false); ?></b-dropdown-text>
                 </template>
 
                 <div class="card mb-4 shadow-sm" style="height: 180px;">
