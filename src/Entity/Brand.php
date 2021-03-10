@@ -35,7 +35,7 @@ class Brand implements RoutableEntityInterface, LoggableEntityInterface
     private $id;
 
     /**
-     * @Cycle\Annotated\Annotation\Column(type = "string(32)")
+     * @Cycle\Annotated\Annotation\Column(type = "string(255)")
      * @var string
      */
     private $name;
