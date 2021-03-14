@@ -60,6 +60,48 @@ class BrandUrlGenerator implements UrlGeneratorInterface
      */
     public function generate(string $name, array $parameters = []): string
     {
+        return $this->urlGenerator->generate(
+            $name,
+            $this->injectParameters($name, $parameters)
+        );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function generateAbsolute(string $name, array $parameters = [], string $scheme = null, string $host = null): string
+    {
+        return $this->urlGenerator->generateAbsolute(
+            $name,
+            $this->injectParameters($name, $parameters),
+            $scheme,
+            $host
+        );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getUriPrefix(): string
+    {
+        return $this->urlGenerator->getUriPrefix();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setUriPrefix(string $name): void
+    {
+        $this->urlGenerator->setUriPrefix($name);
+    }
+
+    /**
+     * @param string $name
+     * @param array $parameters
+     * @return array
+     */
+    private function injectParameters(string $name, array $parameters = []): array
+    {
         if (!isset($parameters['brandId'])) {
             $route = $this->routeCollection->getRoute($name);
             $parsedRoutes = array_reverse($this->routeParser->parse($route->getPattern()));
@@ -77,30 +119,6 @@ class BrandUrlGenerator implements UrlGeneratorInterface
             }
         }
 
-        return $this->urlGenerator->generate($name, $parameters);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function generateAbsolute(string $name, array $parameters = [], string $scheme = null, string $host = null): string
-    {
-        return $this->urlGenerator->generateAbsolute($name, $parameters, $scheme, $host);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getUriPrefix(): string
-    {
-        return $this->urlGenerator->getUriPrefix();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setUriPrefix(string $name): void
-    {
-        $this->urlGenerator->setUriPrefix($name);
+        return $parameters;
     }
 }
