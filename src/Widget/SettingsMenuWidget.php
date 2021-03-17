@@ -2,7 +2,7 @@
 
 namespace Mailery\Brand\Widget;
 
-use Yiisoft\Yii\Bootstrap4\Nav;
+use Yiisoft\Yii\Bootstrap5\Nav;
 use Yiisoft\Widget\Widget;
 use Mailery\Brand\Menu\SettingsMenu;
 use Yiisoft\Router\UrlMatcherInterface;
