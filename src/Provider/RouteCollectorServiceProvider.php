@@ -23,31 +23,32 @@ final class RouteCollectorServiceProvider extends ServiceProvider
         $collector = $container->get(RouteCollectorInterface::class);
 
         $collector->addRoute(
-            Route::get('/brands', [DefaultController::class, 'index'])
+            Route::get('/brands')
                 ->name('/brand/default/index')
-                ->addMiddleware(AssetBundleMiddleware::class)
+                ->middleware(AssetBundleMiddleware::class)
+                ->action([DefaultController::class, 'index'])
         );
 
         $collector->addGroup(
-            Group::create(
-                '/brand',
-                [
-                    Route::methods(['GET', 'POST'], '/new-brand', [DefaultController::class, 'create'])
-                        ->name('/brand/default/create'),
-                    Route::delete('/{id:\d+}/delete', [DefaultController::class, 'delete'])
-                        ->name('/brand/default/delete'),
-                ]
-            )->addMiddleware(AssetBundleMiddleware::class)
+            Group::create('/brand')
+                ->middleware(AssetBundleMiddleware::class)
+                ->routes(
+                    Route::methods(['GET', 'POST'], '/new-brand')
+                        ->name('/brand/default/create')
+                        ->action([DefaultController::class, 'create']),
+                    Route::delete('/{id:\d+}/delete')
+                        ->name('/brand/default/delete')
+                        ->action([DefaultController::class, 'delete'])
+                )
         );
 
         $collector->addGroup(
-            Group::create(
-                '/brand/{brandId:\d+}',
-                [
-                    Route::methods(['GET', 'POST'], '/settings/basic', [SettingsController::class, 'basic'])
-                        ->name('/brand/settings/basic'),
-                ]
-            )
+            Group::create('/brand/{brandId:\d+}')
+                ->routes(
+                    Route::methods(['GET', 'POST'], '/settings/basic')
+                        ->action([SettingsController::class, 'basic'])
+                        ->name('/brand/settings/basic')
+                )
         );
     }
 }
