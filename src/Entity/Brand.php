@@ -147,6 +147,15 @@ class Brand implements RoutableEntityInterface, LoggableEntityInterface
     }
 
     /**
+     * @param string $channel
+     * @return bool
+     */
+    public function hasChannel(string $channel): bool
+    {
+        return in_array($channel, $this->getChannels());
+    }
+
+    /**
      * @inheritdoc
      */
     public function getEditRouteName(): ?string

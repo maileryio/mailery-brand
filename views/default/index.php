@@ -78,7 +78,7 @@ $this->setTitle('My Brands');
                                 /** @var ChannelInterface $channel */
                                 $iconCssClass = 'text-secondary';
 
-                                if (in_array($channel->getKey(), $brand->getChannels())) {
+                                if (in_array($channel->getName(), $brand->getChannels())) {
                                     $iconCssClass = 'text-success';
                                 }
 

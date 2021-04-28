@@ -152,7 +152,7 @@ class BrandForm extends FormModel
         $listOptions = [];
         foreach ($this->channelList as $channel) {
             /** @var ChannelInterface $channel */
-            $listOptions[$channel->getKey()] = $channel->getLabel();
+            $listOptions[$channel->getName()] = $channel->getLabel();
         }
 
         return $listOptions;
