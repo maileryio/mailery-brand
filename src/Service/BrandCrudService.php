@@ -31,8 +31,11 @@ class BrandCrudService
         $brand = (new Brand())
             ->setName($valueObject->getName())
             ->setDescription($valueObject->getDescription())
-            ->setChannels($valueObject->getChannels())
         ;
+
+        foreach ($valueObject->getChannels() as $channel) {
+            $brand->getChannels()->add($channel);
+        }
 
         (new EntityWriter($this->orm))->write([$brand]);
 
@@ -49,8 +52,15 @@ class BrandCrudService
         $brand = $brand
             ->setName($valueObject->getName())
             ->setDescription($valueObject->getDescription())
-            ->setChannels($valueObject->getChannels())
         ;
+
+        foreach ($brand->getChannels() as $channel) {
+            $brand->getChannels()->removeElement($channel);
+        }
+
+        foreach ($valueObject->getChannels() as $channel) {
+            $brand->getChannels()->add($channel);
+        }
 
         (new EntityWriter($this->orm))->write([$brand]);
 

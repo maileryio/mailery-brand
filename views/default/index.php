@@ -1,7 +1,8 @@
 <?php declare(strict_types=1);
 
 use Mailery\Activity\Log\Widget\ActivityLogLink;
-use Mailery\Channel\ChannelInterface;
+use Mailery\Channel\Entity\Channel;
+use Mailery\Channel\Model\ChannelTypeInterface;
 use Mailery\Brand\Module;
 use Mailery\Brand\Entity\Brand;
 use Mailery\Icon\Icon;
@@ -9,7 +10,7 @@ use Mailery\Widget\Link\Link;
 
 /** @var Yiisoft\Yii\WebView $this */
 /** @var Mailery\Subscriber\Counter\SubscriberCounter $subscriberCounter /
-/** @var Mailery\Channel\Model\ChannelList $channelList /
+/** @var Mailery\Channel\Model\ChannelTypeList $channelTypeList /
 /** @var Yiisoft\Aliases\Aliases $aliases */
 /** @var Yiisoft\Translator\TranslatorInterface $translator */
 /** @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator */
@@ -74,17 +75,29 @@ $this->setTitle('My Brands');
                     </div>
                     <div class="card-body h-50 bg-light border-top">
                         <ul class="list-unstyled">
-                            <?php foreach ($channelList as $channel) {
-                                /** @var ChannelInterface $channel */
-                                $iconCssClass = 'text-secondary';
+                            <?php
+                                $channelTypes = [];
 
-                                if (in_array($channel->getName(), $brand->getChannels())) {
-                                    $iconCssClass = 'text-success';
+                                foreach ($brand->getChannels() as $channel) {
+                                    /** @var Channel $channel */
+                                    $channelType = $channelTypeList->findByEntity($channel);
+                                    if ($channelType) {
+                                        $channelTypes[] = $channelType;
+                                    }
                                 }
 
-                                $icon = Icon::widget()->name('check-circle')->options(['class' => $iconCssClass]);
-                                echo '<li>' . $icon . ' ' . $channel->getLabel() . '</li>';
-                            } ?>
+                                foreach ($channelTypeList as $channelType) {
+                                    /** @var ChannelTypeInterface $channelType */
+                                    $iconCssClass = 'text-secondary';
+
+                                    if (in_array($channelType, $channelTypes)) {
+                                        $iconCssClass = 'text-success';
+                                    }
+
+                                    $icon = Icon::widget()->name('check-circle')->options(['class' => $iconCssClass]);
+                                    echo '<li>' . $icon . ' ' . $channelType->getLabel() . '</li>';
+                                }
+                            ?>
                         </ul>
                     </div>
                 </div>

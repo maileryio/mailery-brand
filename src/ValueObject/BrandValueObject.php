@@ -3,6 +3,7 @@
 namespace Mailery\Brand\ValueObject;
 
 use Mailery\Brand\Form\BrandForm;
+use Mailery\Channel\Entity\Channel;
 
 class BrandValueObject
 {
@@ -17,7 +18,7 @@ class BrandValueObject
     private string $description;
 
     /**
-     * @var array
+     * @var Channel[]
      */
     private array $channels;
 
@@ -31,7 +32,7 @@ class BrandValueObject
 
         $new->name = $form->getAttributeValue('name');
         $new->description = $form->getAttributeValue('description');
-        $new->channels = $form->getAttributeValue('channels');
+        $new->channels = $form->getChannels();
 
         return $new;
     }
@@ -53,7 +54,7 @@ class BrandValueObject
     }
 
     /**
-     * @return array
+     * @return Channel[]
      */
     public function getChannels(): array
     {

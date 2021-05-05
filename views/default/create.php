@@ -45,7 +45,7 @@ $this->setTitle('New Brand');
                 'rows' => 2,
             ]); ?>
         <?= $field->config($form, 'channels')
-            ->checkBoxList($form->getChannelListOptions()); ?>
+            ->checkboxList($form->getChannelListOptions(), ['name' => $form->getFormName() . '[channels][]']); ?>
 
         <?= Html::submitButton(
             'Create',

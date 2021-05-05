@@ -24,7 +24,7 @@ use Yiisoft\Http\Status;
 use Yiisoft\Http\Header;
 use Yiisoft\Router\UrlGeneratorInterface as UrlGenerator;
 use Mailery\Brand\Service\BrandCrudService;
-use Mailery\Channel\Model\ChannelList;
+use Mailery\Channel\Model\ChannelTypeList;
 use Yiisoft\Yii\View\ViewRenderer;
 use Psr\Http\Message\ResponseFactoryInterface as ResponseFactory;
 use Yiisoft\Validator\ValidatorInterface;
@@ -82,16 +82,16 @@ class DefaultController
 
     /**
      * @param SubscriberCounter $subscriberCounter
-     * @param ChannelList $channelList
+     * @param ChannelTypeList $channelTypeList
      * @return Response
      */
-    public function index(SubscriberCounter $subscriberCounter, ChannelList $channelList): Response
+    public function index(SubscriberCounter $subscriberCounter, ChannelTypeList $channelTypeList): Response
     {
         $dataReader = $this->brandRepo
             ->getDataReader()
             ->withSort(Sort::only(['id'])->withOrder(['id' => 'DESC']));
 
-        return $this->viewRenderer->render('index', compact('dataReader', 'subscriberCounter', 'channelList'));
+        return $this->viewRenderer->render('index', compact('dataReader', 'subscriberCounter', 'channelTypeList'));
     }
 
     /**

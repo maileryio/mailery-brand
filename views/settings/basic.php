@@ -51,7 +51,7 @@ use Yiisoft\Yii\Widgets\ContentDecorator;
         <div class="mb-4"></div>
 
         <?= $field->config($form, 'channels')
-            ->checkboxList($form->getChannelListOptions()); ?>
+            ->checkboxList($form->getChannelListOptions(), ['name' => $form->getFormName() . '[channels][]']); ?>
 
         <?= Html::submitButton(
             'Save',

@@ -15,6 +15,8 @@ namespace Mailery\Brand\Entity;
 use Mailery\Common\Entity\RoutableEntityInterface;
 use Mailery\Activity\Log\Entity\LoggableEntityTrait;
 use Mailery\Activity\Log\Entity\LoggableEntityInterface;
+use Cycle\ORM\Relation\Pivoted\PivotedCollection;
+use Cycle\ORM\Relation\Pivoted\PivotedCollectionInterface;
 
 /**
  * @Cycle\Annotated\Annotation\Entity(
@@ -47,10 +49,15 @@ class Brand implements RoutableEntityInterface, LoggableEntityInterface
     private $description;
 
     /**
-     * @Cycle\Annotated\Annotation\Column(type = "json")
-     * @var string
+     * @Cycle\Annotated\Annotation\Relation\ManyToMany(target = "Mailery\Channel\Entity\Channel", though = "BrandChannel", nullable = false)
+     * @var PivotedCollectionInterface
      */
     private $channels;
+
+    public function __construct()
+    {
+        $this->channels = new PivotedCollection();
+    }
 
     /**
      * @return string
@@ -118,41 +125,54 @@ class Brand implements RoutableEntityInterface, LoggableEntityInterface
     }
 
     /**
-     * @return array
+     * @return PivotedCollectionInterface
      */
-    public function getChannels(): array
+    public function getChannels(): PivotedCollectionInterface
     {
-        $channels = json_decode($this->channels, true);
-        if (!is_array($channels)) {
-            return [];
-        }
-
-        return $channels;
+        return $this->channels;
     }
 
     /**
-     * @param array $channels
+     * @param PivotedCollectionInterface $channels
      * @return self
      */
-    public function setChannels(array $channels): self
+    public function setChannels(PivotedCollectionInterface $channels): self
     {
-        $jsonString = json_encode($channels);
-        if ($jsonString === false) {
-            $jsonString = '[]';
-        }
-
-        $this->channels = $jsonString;
+        $this->channels = $channels;
 
         return $this;
     }
 
     /**
-     * @param string $channel
-     * @return bool
+     * @inheritdoc
      */
-    public function hasChannel(string $channel): bool
+    public function getIndexRouteName(): ?string
     {
-        return in_array($channel, $this->getChannels());
+        return '/user/default/index';
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getIndexRouteParams(): array
+    {
+        return [];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getViewRouteName(): ?string
+    {
+        return '/dashboard/default/index';
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getViewRouteParams(): array
+    {
+        return ['brandId' => $this->getId()];
     }
 
     /**
@@ -174,16 +194,16 @@ class Brand implements RoutableEntityInterface, LoggableEntityInterface
     /**
      * @inheritdoc
      */
-    public function getViewRouteName(): ?string
+    public function getDeleteRouteName(): ?string
     {
-        return '/dashboard/default/index';
+        return '/brand/default/delete';
     }
 
     /**
      * @inheritdoc
      */
-    public function getViewRouteParams(): array
+    public function getDeleteRouteParams(): array
     {
-        return ['brandId' => $this->getId()];
+        return ['id' => $this->getId()];
     }
 }

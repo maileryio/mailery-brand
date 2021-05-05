@@ -88,7 +88,7 @@ class SettingsController
         $body = $request->getParsedBody();
         $brand = $this->brandLocator->getBrand();
 
-        $form = $form->withBrand($brand);
+        $form = $form->withEntity($brand);
 
         if (($request->getMethod() === Method::POST) && $form->load($body) && $validator->validate($form)) {
             $valueObject = BrandValueObject::fromForm($form);

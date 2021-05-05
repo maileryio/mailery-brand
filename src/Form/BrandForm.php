@@ -22,8 +22,9 @@ use Yiisoft\Validator\Rule\Callback;
 use Yiisoft\Validator\Rule\HasLength;
 use Yiisoft\Validator\Rule\InRange;
 use Mailery\Brand\Repository\BrandRepository;
-use Mailery\Channel\Model\ChannelList;
-use Mailery\Channel\ChannelInterface;
+use Mailery\Channel\Repository\ChannelRepository;
+use Mailery\Channel\Entity\Channel;
+use Spiral\Database\Injection\Parameter;
 
 class BrandForm extends FormModel
 {
@@ -53,18 +54,18 @@ class BrandForm extends FormModel
     private BrandRepository $brandRepo;
 
     /**
-     * @var ChannelList
+     * @var ChannelRepository
      */
-    private ChannelList $channelList;
+    private ChannelRepository $channelRepo;
 
     /**
      * @param BrandRepository $brandRepo
-     * @param ChannelList $channelList
+     * @param ChannelRepository $channelRepo
      */
-    public function __construct(BrandRepository $brandRepo, ChannelList $channelList)
+    public function __construct(BrandRepository $brandRepo, ChannelRepository $channelRepo)
     {
         $this->brandRepo = $brandRepo;
-        $this->channelList = $channelList;
+        $this->channelRepo = $channelRepo;
         parent::__construct();
     }
 
@@ -86,13 +87,15 @@ class BrandForm extends FormModel
      * @param Brand $brand
      * @return self
      */
-    public function withBrand(Brand $brand): self
+    public function withEntity(Brand $brand): self
     {
         $new = clone $this;
         $new->brand = $brand;
         $new->name = $brand->getName();
         $new->description = $brand->getDescription();
-        $new->channels = $brand->getChannels();
+        $new->channels = $brand->getChannels()->map(
+            fn (Channel $channel) => $channel->getId()
+        )->toArray();
 
         return $new;
     }
@@ -100,21 +103,13 @@ class BrandForm extends FormModel
     /**
      * @return array
      */
-    public function attributeLabels(): array
+    public function getAttributeLabels(): array
     {
         return [
             'name' => 'Brand name',
             'description' => 'Description (optional)',
             'channels' => 'Available channels for this brand',
         ];
-    }
-
-    /**
-     * @return string
-     */
-    public function formName(): string
-    {
-        return 'BrandForm';
     }
 
     /**
@@ -147,12 +142,26 @@ class BrandForm extends FormModel
     /**
      * @return array
      */
+    public function getChannels(): array
+    {
+        if (empty($this->channels)) {
+            return [];
+        }
+
+        return $this->channelRepo->findAll([
+            'id' => ['in' => new Parameter($this->channels, \PDO::PARAM_INT)],
+        ]);
+    }
+
+    /**
+     * @return array
+     */
     public function getChannelListOptions(): array
     {
         $listOptions = [];
-        foreach ($this->channelList as $channel) {
-            /** @var ChannelInterface $channel */
-            $listOptions[$channel->getName()] = $channel->getLabel();
+        foreach ($this->channelRepo->findAll() as $channel) {
+            /** @var Channel $channel */
+            $listOptions[$channel->getId()] = $channel->getName();
         }
 
         return $listOptions;
