@@ -14,10 +14,10 @@ namespace Mailery\Brand\Router;
 
 use FastRoute\RouteParser;
 use Mailery\Brand\BrandLocatorInterface as BrandLocator;
+use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Router\FastRoute\UrlGenerator;
 use Yiisoft\Router\RouteCollectionInterface;
 use Yiisoft\Router\UrlGeneratorInterface;
-use Yiisoft\Router\UrlMatcherInterface;
 
 class BrandUrlGenerator implements UrlGeneratorInterface
 {
@@ -44,13 +44,13 @@ class BrandUrlGenerator implements UrlGeneratorInterface
     /**
      * @param BrandLocator $brandLocator
      * @param RouteCollectionInterface $routeCollection
-     * @param UrlMatcherInterface $matcher
+     * @param CurrentRoute $currentRoute
      * @param RouteParser|null $parser
      */
-    public function __construct(BrandLocator $brandLocator, RouteCollectionInterface $routeCollection, UrlMatcherInterface $matcher, RouteParser $parser = null)
+    public function __construct(BrandLocator $brandLocator, RouteCollectionInterface $routeCollection, CurrentRoute $currentRoute, RouteParser $parser = null)
     {
         $this->brandLocator = $brandLocator;
-        $this->urlGenerator = new UrlGenerator($routeCollection, $matcher, $parser);
+        $this->urlGenerator = new UrlGenerator($routeCollection, $currentRoute, $parser);
         $this->routeCollection = $routeCollection;
         $this->routeParser = $parser ?? new RouteParser\Std();
     }
@@ -85,6 +85,14 @@ class BrandUrlGenerator implements UrlGeneratorInterface
     public function getUriPrefix(): string
     {
         return $this->urlGenerator->getUriPrefix();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setEncodeRaw(bool $encodeRaw): void
+    {
+        $this->urlGenerator->setEncodeRaw($encodeRaw);
     }
 
     /**

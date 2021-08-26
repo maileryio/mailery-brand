@@ -119,9 +119,9 @@ class BrandForm extends FormModel
     {
         return [
             'name' => [
-                new RequiredHtmlOptions(new Required()),
-                new HasLengthHtmlOptions((new HasLength())->min(4)->max(32)),
-                new Callback(function ($value) {
+                new RequiredHtmlOptions(Required::rule()),
+                new HasLengthHtmlOptions(HasLength::rule()->min(4)->max(32)),
+                Callback::rule(function ($value) {
                     $result = new Result();
                     $brand = $this->brandRepo->findByName($value, $this->brand);
 
@@ -133,8 +133,8 @@ class BrandForm extends FormModel
                 })
             ],
             'channels' => [
-                new RequiredHtmlOptions(new Required()),
-                new InRange(array_keys($this->getChannelListOptions())),
+                new RequiredHtmlOptions(Required::rule()),
+                InRange::rule(array_keys($this->getChannelListOptions())),
             ],
         ];
     }

@@ -5,14 +5,14 @@ namespace Mailery\Brand\Widget;
 use Yiisoft\Yii\Bootstrap5\Nav;
 use Yiisoft\Widget\Widget;
 use Mailery\Brand\Menu\SettingsMenu;
-use Yiisoft\Router\UrlMatcherInterface;
+use Yiisoft\Router\CurrentRoute;
 
 class SettingsMenuWidget extends Widget
 {
     /**
-     * @var UrlMatcherInterface
+     * @var CurrentRoute
      */
-    private UrlMatcherInterface $urlMatcher;
+    private CurrentRoute $currentRoute;
 
     /**
      * @var SettingsMenu
@@ -20,14 +20,14 @@ class SettingsMenuWidget extends Widget
     private SettingsMenu $settingsMenu;
 
     /**
-     * @param UrlMatcherInterface $urlMatcher
+     * @param CurrentRoute $currentRoute
      * @param SettingsMenu $settingsMenu
      */
     public function __construct(
-        UrlMatcherInterface $urlMatcher,
+        CurrentRoute $currentRoute,
         SettingsMenu $settingsMenu
     ) {
-        $this->urlMatcher = $urlMatcher;
+        $this->currentRoute = $currentRoute;
         $this->settingsMenu = $settingsMenu;
     }
 
@@ -41,7 +41,7 @@ class SettingsMenuWidget extends Widget
                 'class' => 'nav nav-pills',
             ])
             ->currentPath(
-                $this->urlMatcher->getCurrentUri()->getPath()
+                $this->currentRoute->getUri()->getPath()
             )
             ->items($this->settingsMenu->getItems())
             ->render();
