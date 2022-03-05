@@ -62,8 +62,10 @@ class BrandForm extends FormModel
      * @param BrandRepository $brandRepo
      * @param ChannelRepository $channelRepo
      */
-    public function __construct(BrandRepository $brandRepo, ChannelRepository $channelRepo)
-    {
+    public function __construct(
+        BrandRepository $brandRepo,
+        ChannelRepository $channelRepo
+    ) {
         $this->brandRepo = $brandRepo;
         $this->channelRepo = $channelRepo;
         parent::__construct();
@@ -123,9 +125,9 @@ class BrandForm extends FormModel
                 new HasLengthHtmlOptions(HasLength::rule()->min(4)->max(32)),
                 Callback::rule(function ($value) {
                     $result = new Result();
-                    $brand = $this->brandRepo->findByName($value, $this->brand);
+                    $record = $this->brandRepo->findByName($value, $this->brand);
 
-                    if ($brand !== null) {
+                    if ($record !== null) {
                         $result->addError('This brand name already exists.');
                     }
 

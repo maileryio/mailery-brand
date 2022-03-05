@@ -104,7 +104,7 @@ class DefaultController
     {
         $body = $request->getParsedBody();
 
-        if (($request->getMethod() === Method::POST) && $form->load($body) && $validator->validate($form)) {
+        if (($request->getMethod() === Method::POST) && $form->load($body) && $validator->validate($form)->isValid()) {
             $valueObject = BrandValueObject::fromForm($form);
             $this->brandCrudService->create($valueObject);
 
