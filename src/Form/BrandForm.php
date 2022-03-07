@@ -25,6 +25,8 @@ use Mailery\Brand\Repository\BrandRepository;
 use Mailery\Channel\Repository\ChannelRepository;
 use Mailery\Channel\Entity\Channel;
 use Spiral\Database\Injection\Parameter;
+use Yiisoft\Validator\Rule\Each;
+use Yiisoft\Validator\Rules;
 
 class BrandForm extends FormModel
 {
@@ -72,20 +74,6 @@ class BrandForm extends FormModel
     }
 
     /**
-     * @param string $name
-     * @param type $value
-     * @return void
-     */
-    public function setAttribute(string $name, $value): void
-    {
-        if ($name === 'channels') {
-            $this->$name = array_filter((array) $value);
-        } else {
-            parent::setAttribute($name, $value);
-        }
-    }
-
-    /**
      * @param Brand $brand
      * @return self
      */
@@ -100,6 +88,50 @@ class BrandForm extends FormModel
         )->toArray();
 
         return $new;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function load(array $data, ?string $formName = null): bool
+    {
+        $scope = $formName ?? $this->getFormName();
+
+        if (isset($data[$scope]['channels'])) {
+            $data[$scope]['channels'] = array_filter((array) $data[$scope]['channels']);
+        }
+
+        return parent::load($data, $formName);
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    /**
+     * @return array
+     */
+    public function getChannels(): array
+    {
+        if (empty($this->channels)) {
+            return [];
+        }
+
+        return $this->channelRepo->findAll([
+            'id' => ['in' => new Parameter($this->channels, \PDO::PARAM_INT)],
+        ]);
     }
 
     /**
@@ -136,23 +168,11 @@ class BrandForm extends FormModel
             ],
             'channels' => [
                 new RequiredHtmlOptions(Required::rule()),
-                InRange::rule(array_keys($this->getChannelListOptions())),
+                Each::rule(new Rules([
+                    InRange::rule(array_keys($this->getChannelListOptions())),
+                ]))->message('{error}'),
             ],
         ];
-    }
-
-    /**
-     * @return array
-     */
-    public function getChannels(): array
-    {
-        if (empty($this->channels)) {
-            return [];
-        }
-
-        return $this->channelRepo->findAll([
-            'id' => ['in' => new Parameter($this->channels, \PDO::PARAM_INT)],
-        ]);
     }
 
     /**

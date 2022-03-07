@@ -29,9 +29,8 @@ class BrandValueObject
     public static function fromForm(BrandForm $form): self
     {
         $new = new self();
-
-        $new->name = $form->getAttributeValue('name');
-        $new->description = $form->getAttributeValue('description');
+        $new->name = $form->getName();
+        $new->description = $form->getDescription();
         $new->channels = $form->getChannels();
 
         return $new;

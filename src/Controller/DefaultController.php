@@ -112,6 +112,7 @@ class DefaultController
                 ->createResponse(Status::FOUND)
                 ->withHeader(Header::LOCATION, $this->urlGenerator->generate('/brand/default/index'));
         }
+        var_dump($form->getErrors());
 
         return $this->viewRenderer->render('create', compact('form'));
     }
