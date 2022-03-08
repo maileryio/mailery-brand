@@ -127,13 +127,13 @@ class DefaultController
     {
         $brandId = $request->getAttribute('id');
         if (empty($brandId) || ($brand = $this->brandRepo->findByPK($brandId)) === null) {
-            return $this->responseFactory->createResponse(404);
+            return $this->responseFactory->createResponse(Status::NOT_FOUND);
         }
 
         $brandCrudService->delete($brand);
 
         return $this->responseFactory
-            ->createResponse(302)
-            ->withHeader('Location', $urlGenerator->generate('/brand/default/index'));
+            ->createResponse(Status::SEE_OTHER)
+            ->withHeader(Header::LOCATION, $urlGenerator->generate('/brand/default/index'));
     }
 }
