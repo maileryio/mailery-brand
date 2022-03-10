@@ -12,47 +12,39 @@ declare(strict_types=1);
 
 namespace Mailery\Brand\Entity;
 
+use Cycle\Annotated\Annotation\Entity;
+use Cycle\Annotated\Annotation\Column;
+use Cycle\Annotated\Annotation\Relation\ManyToMany;
 use Mailery\Common\Entity\RoutableEntityInterface;
 use Mailery\Activity\Log\Entity\LoggableEntityTrait;
 use Mailery\Activity\Log\Entity\LoggableEntityInterface;
-use Cycle\ORM\Relation\Pivoted\PivotedCollection;
-use Cycle\ORM\Relation\Pivoted\PivotedCollectionInterface;
+use Cycle\ORM\Collection\Pivoted\PivotedCollection;
+use Mailery\Brand\Repository\BrandRepository;
+use Mailery\Brand\Mapper\DefaultMapper;
+use Mailery\Channel\Entity\Channel;
+use Mailery\Brand\Entity\BrandChannel;
+use Cycle\ORM\Collection\DoctrineCollectionFactory;
 
-/**
- * @Cycle\Annotated\Annotation\Entity(
- *      table = "brands",
- *      repository = "Mailery\Brand\Repository\BrandRepository",
- *      mapper = "Mailery\Brand\Mapper\DefaultMapper",
- *      constrain = "Mailery\Brand\Constrain\DefaultConstrain"
- * )
- */
+#[Entity(
+    table: 'brands',
+    repository: BrandRepository::class,
+    mapper: DefaultMapper::class
+)]
 class Brand implements RoutableEntityInterface, LoggableEntityInterface
 {
     use LoggableEntityTrait;
 
-    /**
-     * @Cycle\Annotated\Annotation\Column(type = "primary")
-     * @var int|null
-     */
-    private $id;
+    #[Column(type: 'primary')]
+    private int $id;
 
-    /**
-     * @Cycle\Annotated\Annotation\Column(type = "string(255)")
-     * @var string
-     */
-    private $name;
+    #[Column(type: 'string(255)')]
+    private string $name;
 
-    /**
-     * @Cycle\Annotated\Annotation\Column(type = "text")
-     * @var string
-     */
-    private $description;
+    #[Column(type: 'text')]
+    private string $description;
 
-    /**
-     * @Cycle\Annotated\Annotation\Relation\ManyToMany(target = "Mailery\Channel\Entity\Channel", though = "BrandChannel", nullable = false)
-     * @var PivotedCollectionInterface
-     */
-    private $channels;
+    #[ManyToMany(target: Channel::class, through: BrandChannel::class, collection: DoctrineCollectionFactory::class)]
+    private PivotedCollection $channels;
 
     public function __construct()
     {
@@ -125,18 +117,18 @@ class Brand implements RoutableEntityInterface, LoggableEntityInterface
     }
 
     /**
-     * @return PivotedCollectionInterface
+     * @return PivotedCollection
      */
-    public function getChannels(): PivotedCollectionInterface
+    public function getChannels(): PivotedCollection
     {
         return $this->channels;
     }
 
     /**
-     * @param PivotedCollectionInterface $channels
+     * @param PivotedCollection $channels
      * @return self
      */
-    public function setChannels(PivotedCollectionInterface $channels): self
+    public function setChannels(PivotedCollection $channels): self
     {
         $this->channels = $channels;
 

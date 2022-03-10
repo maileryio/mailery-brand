@@ -20,9 +20,9 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Yiisoft\Router\UrlGeneratorInterface;
-use Yiisoft\Yii\Web\Middleware\Redirect;
+use Yiisoft\Yii\Middleware\Redirect;
 
-class BrandRequiredMiddleware implements MiddlewareInterface
+class BrandMiddleware implements MiddlewareInterface
 {
     /**
      * @var string
@@ -32,7 +32,7 @@ class BrandRequiredMiddleware implements MiddlewareInterface
     /**
      * @var array
      */
-    private array $parameters = [];
+    private array $arguments = [];
 
     /**
      * @var ResponseFactoryInterface
@@ -63,15 +63,16 @@ class BrandRequiredMiddleware implements MiddlewareInterface
 
     /**
      * @param string $name
-     * @param array $parameters
+     * @param array $arguments
      * @return self
      */
-    public function toRoute(string $name, array $parameters = []): self
+    public function withRoute(string $name, array $arguments = []): self
     {
-        $this->route = $name;
-        $this->parameters = $parameters;
+        $new = clone $this;
+        $new->route = $name;
+        $new->arguments = $arguments;
 
-        return $this;
+        return $new;
     }
 
     /**
@@ -83,11 +84,15 @@ class BrandRequiredMiddleware implements MiddlewareInterface
     {
         $this->brandLocator->locate($request);
 
+        if ($this->brandLocator->hasBrand()) {
+            $this->urlGenerator->setDefaultArgument('brandId', $this->brandLocator->getBrand()->getId());
+        }
+
         try {
             return $handler->handle($request);
         } catch (BrandRequiredException $e) {
             $path = $request->getUri()->getPath();
-            $redirect = $this->urlGenerator->generate($this->route, $this->parameters);
+            $redirect = $this->urlGenerator->generate($this->route, $this->arguments);
 
             if ($path !== $redirect) {
                 return (new Redirect($this->responseFactory, $this->urlGenerator))

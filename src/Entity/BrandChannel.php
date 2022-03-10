@@ -2,24 +2,22 @@
 
 namespace Mailery\Brand\Entity;
 
+use Cycle\Annotated\Annotation\Entity;
+use Cycle\Annotated\Annotation\Column;
 use Mailery\Activity\Log\Entity\LoggableEntityInterface;
 use Mailery\Activity\Log\Entity\LoggableEntityTrait;
+use Mailery\Brand\Mapper\BrandChannelMapper;
 
-/**
- * @Cycle\Annotated\Annotation\Entity(
- *      table = "brands_channels",
- *      mapper = "Mailery\Brand\Mapper\BrandChannelMapper"
- * )
- */
+#[Entity(
+    table: 'brands_channels',
+    mapper: BrandChannelMapper::class
+)]
 class BrandChannel implements LoggableEntityInterface
 {
     use LoggableEntityTrait;
 
-    /**
-     * @Cycle\Annotated\Annotation\Column(type = "primary")
-     * @var int|null
-     */
-    private $id;
+    #[Column(type: 'primary')]
+    private int $id;
 
     /**
      * @return string

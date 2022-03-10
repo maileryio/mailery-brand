@@ -10,12 +10,11 @@ declare(strict_types=1);
  * @copyright Copyright (c) 2020, Mailery (https://mailery.io/)
  */
 
-use Mailery\Brand\Middleware\BrandRequiredMiddleware;
 use Yiisoft\Router\UrlGeneratorInterface;
 
 return [
     'yiisoft/yii-cycle' => [
-        'annotated-entity-paths' => [
+        'entity-paths' => [
             '@vendor/maileryio/mailery-brand/src/Entity',
         ],
     ],
@@ -62,12 +61,6 @@ return [
                     },
                 ],
             ],
-        ],
-    ],
-
-    'dispatcher' => [
-        'middlewares' => [
-            BrandRequiredMiddleware::class,
         ],
     ],
 ];
