@@ -25,7 +25,7 @@ class BrandAssetBundle extends AssetBundle
     /**
      * {@inheritdoc}
      */
-    public ?string $baseUrl = '@web/@maileryio/mailery-brand-assets';
+    public ?string $baseUrl = '@assetsUrl/@maileryio/mailery-brand-assets';
 
     /**
      * {@inheritdoc}
