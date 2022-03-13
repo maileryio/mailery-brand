@@ -10,26 +10,13 @@ use Yiisoft\Router\CurrentRoute;
 class SettingsMenuWidget extends Widget
 {
     /**
-     * @var CurrentRoute
-     */
-    private CurrentRoute $currentRoute;
-
-    /**
-     * @var SettingsMenu
-     */
-    private SettingsMenu $settingsMenu;
-
-    /**
      * @param CurrentRoute $currentRoute
      * @param SettingsMenu $settingsMenu
      */
     public function __construct(
-        CurrentRoute $currentRoute,
-        SettingsMenu $settingsMenu
-    ) {
-        $this->currentRoute = $currentRoute;
-        $this->settingsMenu = $settingsMenu;
-    }
+        private CurrentRoute $currentRoute,
+        private SettingsMenu $settingsMenu
+    ) {}
 
     /**
      * @return string

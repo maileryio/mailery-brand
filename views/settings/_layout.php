@@ -5,7 +5,7 @@ use Mailery\Brand\Widget\SettingsMenuWidget;
 /** @var Yiisoft\Yii\WebView $this */
 /** @var Psr\Http\Message\ServerRequestInterface $request */
 /** @var Mailery\Brand\Entity\Brand $brand */
-/** @var Mailery\Brand\Form\BrandForm $form */
+/** @var Yiisoft\Form\FormModelInterface $form */
 /** @var Mailery\Brand\Menu\SettingsMenu $settingsMenu */
 /** @var string $csrf */
 

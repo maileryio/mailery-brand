@@ -30,17 +30,11 @@ class BrandLocator implements BrandLocatorInterface
     private ?Brand $brand = null;
 
     /**
-     * @var ORMInterface
-     */
-    private ORMInterface $orm;
-
-    /**
      * @param ORMInterface $orm
      */
-    public function __construct(ORMInterface $orm)
-    {
-        $this->orm = $orm;
-    }
+    public function __construct(
+        private ORMInterface $orm
+    ) {}
 
     /**
      * @throws BrandRequiredException

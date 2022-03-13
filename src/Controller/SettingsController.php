@@ -19,61 +19,25 @@ use Mailery\Brand\ValueObject\BrandValueObject;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Yiisoft\Http\Method;
-use Yiisoft\Router\UrlGeneratorInterface as UrlGenerator;
 use Yiisoft\Yii\View\ViewRenderer;
-use Psr\Http\Message\ResponseFactoryInterface as ResponseFactory;
 use Yiisoft\Validator\ValidatorInterface;
 use Yiisoft\Session\Flash\FlashInterface;
 
 class SettingsController
 {
     /**
-     * @var ViewRenderer
-     */
-    private ViewRenderer $viewRenderer;
-
-    /**
-     * @var ResponseFactory
-     */
-    private ResponseFactory $responseFactory;
-
-    /**
-     * @var UrlGenerator
-     */
-    private UrlGenerator $urlGenerator;
-
-    /**
-     * @var BrandCrudService
-     */
-    private BrandCrudService $brandCrudService;
-
-    /**
-     * @var BrandLocatorInterface
-     */
-    private BrandLocatorInterface $brandLocator;
-
-    /**
      * @param ViewRenderer $viewRenderer
-     * @param ResponseFactory $responseFactory
-     * @param UrlGenerator $urlGenerator
      * @param BrandCrudService $brandCrudService
      * @param BrandLocatorInterface $brandLocator
      */
     public function __construct(
-        ViewRenderer $viewRenderer,
-        ResponseFactory $responseFactory,
-        UrlGenerator $urlGenerator,
-        BrandCrudService $brandCrudService,
-        BrandLocatorInterface $brandLocator
+        private ViewRenderer $viewRenderer,
+        private BrandCrudService $brandCrudService,
+        private BrandLocatorInterface $brandLocator
     ) {
         $this->viewRenderer = $viewRenderer
             ->withController($this)
             ->withViewPath(dirname(dirname(__DIR__)) . '/views');
-
-        $this->responseFactory = $responseFactory;
-        $this->urlGenerator = $urlGenerator;
-        $this->brandCrudService = $brandCrudService;
-        $this->brandLocator = $brandLocator;
     }
 
     /**

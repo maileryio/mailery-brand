@@ -49,25 +49,13 @@ class BrandForm extends FormModel
     private ?Brand $brand = null;
 
     /**
-     * @var BrandRepository
-     */
-    private BrandRepository $brandRepo;
-
-    /**
-     * @var ChannelRepository
-     */
-    private ChannelRepository $channelRepo;
-
-    /**
      * @param BrandRepository $brandRepo
      * @param ChannelRepository $channelRepo
      */
     public function __construct(
-        BrandRepository $brandRepo,
-        ChannelRepository $channelRepo
+        private BrandRepository $brandRepo,
+        private ChannelRepository $channelRepo
     ) {
-        $this->brandRepo = $brandRepo;
-        $this->channelRepo = $channelRepo;
         parent::__construct();
     }
 

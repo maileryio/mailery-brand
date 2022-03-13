@@ -35,31 +35,15 @@ class BrandMiddleware implements MiddlewareInterface
     private array $arguments = [];
 
     /**
-     * @var ResponseFactoryInterface
-     */
-    private ResponseFactoryInterface $responseFactory;
-
-    /**
-     * @var UrlGeneratorInterface
-     */
-    private UrlGeneratorInterface $urlGenerator;
-
-    /**
-     * @var BrandLocator
-     */
-    private BrandLocator $brandLocator;
-
-    /**
      * @param ResponseFactoryInterface $responseFactory
      * @param UrlGeneratorInterface $urlGenerator
      * @param BrandLocator $brandLocator
      */
-    public function __construct(ResponseFactoryInterface $responseFactory, UrlGeneratorInterface $urlGenerator, BrandLocator $brandLocator)
-    {
-        $this->responseFactory = $responseFactory;
-        $this->urlGenerator = $urlGenerator;
-        $this->brandLocator = $brandLocator;
-    }
+    public function __construct(
+        private ResponseFactoryInterface $responseFactory,
+        private UrlGeneratorInterface $urlGenerator,
+        private BrandLocator $brandLocator
+    ) {}
 
     /**
      * @param string $name

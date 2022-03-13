@@ -32,30 +32,6 @@ use Yiisoft\Router\CurrentRoute;
 
 class DefaultController
 {
-    /**
-     * @var ViewRenderer
-     */
-    private ViewRenderer $viewRenderer;
-
-    /**
-     * @var ResponseFactory
-     */
-    private ResponseFactory $responseFactory;
-
-    /**
-     * @var UrlGenerator
-     */
-    private UrlGenerator $urlGenerator;
-
-    /**
-     * @var BrandRepository
-     */
-    private BrandRepository $brandRepo;
-
-    /**
-     * @var BrandCrudService
-     */
-    private BrandCrudService $brandCrudService;
 
     /**
      * @param ViewRenderer $viewRenderer
@@ -65,20 +41,15 @@ class DefaultController
      * @param BrandCrudService $brandCrudService
      */
     public function __construct(
-        ViewRenderer $viewRenderer,
-        ResponseFactory $responseFactory,
-        UrlGenerator $urlGenerator,
-        BrandRepository $brandRepo,
-        BrandCrudService $brandCrudService
+        private ViewRenderer $viewRenderer,
+        private ResponseFactory $responseFactory,
+        private UrlGenerator $urlGenerator,
+        private BrandRepository $brandRepo,
+        private BrandCrudService $brandCrudService
     ) {
         $this->viewRenderer = $viewRenderer
             ->withController($this)
             ->withViewPath(dirname(dirname(__DIR__)) . '/views');
-
-        $this->responseFactory = $responseFactory;
-        $this->urlGenerator = $urlGenerator;
-        $this->brandRepo = $brandRepo;
-        $this->brandCrudService = $brandCrudService;
     }
 
     /**
@@ -120,10 +91,9 @@ class DefaultController
     /**
      * @param CurrentRoute $currentRoute
      * @param BrandCrudService $brandCrudService
-     * @param UrlGenerator $urlGenerator
      * @return Response
      */
-    public function delete(CurrentRoute $currentRoute, BrandCrudService $brandCrudService, UrlGenerator $urlGenerator): Response
+    public function delete(CurrentRoute $currentRoute, BrandCrudService $brandCrudService): Response
     {
         $brandId = (int) $currentRoute->getArgument('id');
         if (empty($brandId) || ($brand = $this->brandRepo->findByPK($brandId)) === null) {
@@ -134,6 +104,7 @@ class DefaultController
 
         return $this->responseFactory
             ->createResponse(Status::SEE_OTHER)
-            ->withHeader(Header::LOCATION, $urlGenerator->generate('/brand/default/index'));
+            ->withHeader(Header::LOCATION, $this->urlGenerator->generate('/brand/default/index'));
     }
+
 }

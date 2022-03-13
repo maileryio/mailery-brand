@@ -6,18 +6,13 @@ use Mailery\Menu\MenuInterface;
 
 class SettingsMenu implements MenuInterface
 {
-    /**
-     * @var MenuInterface
-     */
-    private MenuInterface $menu;
 
     /**
      * @param MenuInterface $menu
      */
-    public function __construct(MenuInterface $menu)
-    {
-        $this->menu = $menu;
-    }
+    public function __construct(
+        private MenuInterface $menu
+    ) {}
 
     /**
      * @return array
@@ -29,4 +24,5 @@ class SettingsMenu implements MenuInterface
             $this->menu->getItems()
         );
     }
+
 }
