@@ -20,22 +20,31 @@ use Mailery\Activity\Log\Entity\LoggableEntityTrait;
 use Mailery\Activity\Log\Entity\LoggableEntityInterface;
 use Cycle\ORM\Collection\Pivoted\PivotedCollection;
 use Mailery\Brand\Repository\BrandRepository;
-use Mailery\Brand\Mapper\DefaultMapper;
+use Mailery\Activity\Log\Mapper\LoggableMapper;
 use Mailery\Channel\Entity\Channel;
 use Mailery\Brand\Entity\BrandChannel;
 use Cycle\ORM\Collection\DoctrineCollectionFactory;
+use Cycle\ORM\Entity\Behavior;
 
 #[Entity(
     table: 'brands',
     repository: BrandRepository::class,
-    mapper: DefaultMapper::class
+    mapper: LoggableMapper::class
+)]
+#[Behavior\CreatedAt(
+    field: 'createdAt',
+    column: 'created_at',
+)]
+#[Behavior\UpdatedAt(
+    field: 'updatedAt',
+    column: 'updated_at',
 )]
 class Brand implements RoutableEntityInterface, LoggableEntityInterface
 {
     use LoggableEntityTrait;
 
     #[Column(type: 'primary')]
-    private int $id;
+    private ?int $id = null;
 
     #[Column(type: 'string(255)')]
     private string $name;
@@ -45,6 +54,12 @@ class Brand implements RoutableEntityInterface, LoggableEntityInterface
 
     #[ManyToMany(target: Channel::class, through: BrandChannel::class, collection: DoctrineCollectionFactory::class)]
     private PivotedCollection $channels;
+
+    #[Column(type: 'datetime')]
+    private \DateTimeImmutable $createdAt;
+
+    #[Column(type: 'datetime', nullable: true)]
+    private ?\DateTimeImmutable $updatedAt = null;
 
     public function __construct()
     {
@@ -60,11 +75,11 @@ class Brand implements RoutableEntityInterface, LoggableEntityInterface
     }
 
     /**
-     * @return string|null
+     * @return int|null
      */
-    public function getId(): ?string
+    public function getId(): ?int
     {
-        return $this->id ? (string) $this->id : null;
+        return $this->id;
     }
 
     /**

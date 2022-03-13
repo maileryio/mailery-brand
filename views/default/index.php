@@ -3,7 +3,6 @@
 use Mailery\Activity\Log\Widget\ActivityLogLink;
 use Mailery\Channel\Entity\Channel;
 use Mailery\Channel\Model\ChannelTypeInterface;
-use Mailery\Brand\Module;
 use Mailery\Brand\Entity\Brand;
 use Mailery\Icon\Icon;
 use Mailery\Widget\Link\Link;
@@ -45,8 +44,7 @@ $this->setTitle('My Brands');
                     <?= ActivityLogLink::widget()
                         ->entity($brand)
                         ->tag('b-dropdown-item')
-                        ->label('Activity log')
-                        ->module(Module::NAME); ?>
+                        ->label('Activity log'); ?>
                     <b-dropdown-item href="<?= $settingsUrl; ?>">Settings</b-dropdown-item>
                     <b-dropdown-divider></b-dropdown-divider>
                     <b-dropdown-text variant="danger" class="dropdown-item-custom-link"><?= Link::widget()

@@ -11,11 +11,26 @@ declare(strict_types=1);
  */
 
 use Yiisoft\Router\UrlGeneratorInterface;
+use Mailery\Brand\Entity\Brand;
+use Mailery\Brand\Entity\BrandChannel;
+use Yiisoft\Definitions\DynamicReference;
 
 return [
     'yiisoft/yii-cycle' => [
         'entity-paths' => [
             '@vendor/maileryio/mailery-brand/src/Entity',
+        ],
+    ],
+
+    'maileryio/mailery-activity-log' => [
+        'entity-groups' => [
+            'brand' => [
+                'label' => DynamicReference::to(static fn () => 'Brand'),
+                'entities' => [
+                    Brand::class,
+                    BrandChannel::class,
+                ],
+            ],
         ],
     ],
 
@@ -26,7 +41,7 @@ return [
                     return 'My brands';
                 },
                 'url' => static function (UrlGeneratorInterface $urlGenerator) {
-                    return $urlGenerator->generate('/brand/default/index');
+                    return strtok($urlGenerator->generate('/brand/default/index'), '?');
                 },
             ],
         ],

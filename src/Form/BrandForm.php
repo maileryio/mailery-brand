@@ -14,8 +14,6 @@ namespace Mailery\Brand\Form;
 
 use Mailery\Brand\Entity\Brand;
 use Yiisoft\Form\FormModel;
-use Yiisoft\Form\HtmlOptions\RequiredHtmlOptions;
-use Yiisoft\Form\HtmlOptions\HasLengthHtmlOptions;
 use Yiisoft\Validator\Result;
 use Yiisoft\Validator\Rule\Required;
 use Yiisoft\Validator\Rule\Callback;
@@ -26,7 +24,7 @@ use Mailery\Channel\Repository\ChannelRepository;
 use Mailery\Channel\Entity\Channel;
 use Spiral\Database\Injection\Parameter;
 use Yiisoft\Validator\Rule\Each;
-use Yiisoft\Validator\Rules;
+use Yiisoft\Validator\RuleSet;
 
 class BrandForm extends FormModel
 {
@@ -153,8 +151,8 @@ class BrandForm extends FormModel
     {
         return [
             'name' => [
-                new RequiredHtmlOptions(Required::rule()),
-                new HasLengthHtmlOptions(HasLength::rule()->min(4)->max(32)),
+                Required::rule(),
+                HasLength::rule()->min(4)->max(32),
                 Callback::rule(function ($value) {
                     $result = new Result();
                     $record = $this->brandRepo->findByName($value, $this->brand);
@@ -167,8 +165,8 @@ class BrandForm extends FormModel
                 })
             ],
             'channels' => [
-                new RequiredHtmlOptions(Required::rule()),
-                Each::rule(new Rules([
+                Required::rule(),
+                Each::rule(new RuleSet([
                     InRange::rule(array_keys($this->getChannelListOptions())),
                 ]))->message('{error}'),
             ],

@@ -6,33 +6,41 @@ use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Column;
 use Mailery\Activity\Log\Entity\LoggableEntityInterface;
 use Mailery\Activity\Log\Entity\LoggableEntityTrait;
-use Mailery\Brand\Mapper\BrandChannelMapper;
+use Mailery\Activity\Log\Mapper\LoggableMapper;
+use Cycle\ORM\Entity\Behavior;
+
 
 #[Entity(
     table: 'brands_channels',
-    mapper: BrandChannelMapper::class
+    mapper: LoggableMapper::class
+)]
+#[Behavior\CreatedAt(
+    field: 'createdAt',
+    column: 'created_at'
+)]
+#[Behavior\UpdatedAt(
+    field: 'updatedAt',
+    column: 'updated_at'
 )]
 class BrandChannel implements LoggableEntityInterface
 {
     use LoggableEntityTrait;
 
     #[Column(type: 'primary')]
-    private int $id;
+    private ?int $id = null;
+
+    #[Column(type: 'datetime')]
+    private \DateTimeImmutable $createdAt;
+
+    #[Column(type: 'datetime', nullable: true)]
+    private ?\DateTimeImmutable $updatedAt = null;
 
     /**
-     * @return string
+     * @return int|null
      */
-    public function __toString(): string
+    public function getId(): ?int
     {
-        return 'BrandChannel';
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getId(): ?string
-    {
-        return $this->id ? (string) $this->id : null;
+        return $this->id;
     }
 
     /**

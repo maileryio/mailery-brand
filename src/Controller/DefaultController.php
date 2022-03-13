@@ -28,6 +28,7 @@ use Mailery\Channel\Model\ChannelTypeList;
 use Yiisoft\Yii\View\ViewRenderer;
 use Psr\Http\Message\ResponseFactoryInterface as ResponseFactory;
 use Yiisoft\Validator\ValidatorInterface;
+use Yiisoft\Router\CurrentRoute;
 
 class DefaultController
 {
@@ -112,20 +113,19 @@ class DefaultController
                 ->createResponse(Status::FOUND)
                 ->withHeader(Header::LOCATION, $this->urlGenerator->generate('/brand/default/index'));
         }
-        var_dump($form->getErrors());
 
         return $this->viewRenderer->render('create', compact('form'));
     }
 
     /**
-     * @param Request $request
+     * @param CurrentRoute $currentRoute
      * @param BrandCrudService $brandCrudService
      * @param UrlGenerator $urlGenerator
      * @return Response
      */
-    public function delete(Request $request, BrandCrudService $brandCrudService, UrlGenerator $urlGenerator): Response
+    public function delete(CurrentRoute $currentRoute, BrandCrudService $brandCrudService, UrlGenerator $urlGenerator): Response
     {
-        $brandId = $request->getAttribute('id');
+        $brandId = (int) $currentRoute->getArgument('id');
         if (empty($brandId) || ($brand = $this->brandRepo->findByPK($brandId)) === null) {
             return $this->responseFactory->createResponse(Status::NOT_FOUND);
         }

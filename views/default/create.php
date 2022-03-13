@@ -1,11 +1,11 @@
 <?php
 
 use Yiisoft\Form\Widget\Form;
-use Yiisoft\Html\Html;
 
+/** @var Yiisoft\Form\Widget\Field $field */
 /** @var Yiisoft\Yii\WebView $this */
 /** @var Psr\Http\Message\ServerRequestInterface $request */
-/** @var Mailery\Brand\Form\BrandForm $form */
+/** @var Yiisoft\Form\FormModelInterface $form */
 /** @var string $csrf */
 
 $this->setTitle('New Brand');
@@ -29,30 +29,21 @@ $this->setTitle('New Brand');
     <div class="col-6">
         <?= Form::widget()
             ->action($urlGenerator->generate('/brand/default/create'))
-            ->options(
-                [
-                    'id' => 'form-brand',
-                    'csrf' => $csrf,
-                    'enctype' => 'multipart/form-data',
-                ]
-            )
+            ->csrf($csrf)
+            ->id('brand-form')
             ->begin(); ?>
 
-        <?= $field->config($form, 'name'); ?>
-        <?= $field->config($form, 'description')
-            ->textArea([
-                'class' => 'form-control textarea',
-                'rows' => 2,
-            ]); ?>
-        <?= $field->config($form, 'channels')
-            ->checkboxList($form->getChannelListOptions(), ['name' => $form->getFormName() . '[channels][]']); ?>
+        <?= $field->text($form, 'name')
+                ->autofocus(); ?>
 
-        <?= Html::submitButton(
-            'Create',
-            [
-                'class' => 'btn btn-primary float-right mt-2',
-            ]
-        ); ?>
+        <?= $field->textArea($form, 'description', ['rows()' => [5]])
+                ->class('form-control'); ?>
+
+        <?= $field->select($form, 'channels', ['items()' => [$form->getChannelListOptions()], 'multiple()' => [true]]); ?>
+
+        <?= $field->submitButton()
+                ->class('btn btn-primary float-right mt-2')
+                ->value('Create'); ?>
 
         <?= Form::end(); ?>
     </div>
