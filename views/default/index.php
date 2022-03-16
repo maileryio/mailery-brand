@@ -14,7 +14,7 @@ use Mailery\Widget\Link\Link;
 /** @var Yiisoft\Translator\TranslatorInterface $translator */
 /** @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator */
 /** @var Yiisoft\Data\Reader\DataReaderInterface $dataReader*/
-/** @var string $csrf */
+/** @var Yiisoft\Yii\View\Csrf $csrf */
 
 $this->setTitle('My Brands');
 

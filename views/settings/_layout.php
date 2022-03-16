@@ -7,7 +7,7 @@ use Mailery\Brand\Widget\SettingsMenuWidget;
 /** @var Mailery\Brand\Entity\Brand $brand */
 /** @var Yiisoft\Form\FormModelInterface $form */
 /** @var Mailery\Brand\Menu\SettingsMenu $settingsMenu */
-/** @var string $csrf */
+/** @var Yiisoft\Yii\View\Csrf $csrf */
 
 $this->setTitle('Settings');
 

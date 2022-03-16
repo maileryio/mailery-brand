@@ -7,7 +7,7 @@ use Yiisoft\Yii\Widgets\ContentDecorator;
 /** @var Yiisoft\Form\Widget\Field $field */
 /** @var Yiisoft\Yii\WebView $this */
 /** @var Yiisoft\Form\FormModelInterface $form */
-/** @var string $csrf */
+/** @var Yiisoft\Yii\View\Csrf $csrf */
 ?>
 
 <?= ContentDecorator::widget()
