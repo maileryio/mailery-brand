@@ -47,15 +47,18 @@ $this->setTitle('My Brands');
                         ->label('Activity log'); ?>
                     <b-dropdown-item href="<?= $settingsUrl; ?>">Settings</b-dropdown-item>
                     <b-dropdown-divider></b-dropdown-divider>
-                    <b-dropdown-text variant="danger" class="dropdown-item-custom-link"><?= Link::widget()
-                        ->label('Delete brand')
-                        ->method('delete')
-                        ->href($urlGenerator->generate('/brand/default/delete', ['id' => $brand->getId()]))
-                        ->confirm('Are you sure?')
-                        ->options([
-                            'class' => 'btn btn-link text-decoration-none text-danger',
-                        ])
-                        ->encode(false); ?></b-dropdown-text>
+                    <b-dropdown-text variant="danger" class="dropdown-item-custom-link">
+                        <?= Link::widget()
+                            ->csrf($csrf)
+                            ->label('Delete brand')
+                            ->method('delete')
+                            ->href($urlGenerator->generate('/brand/default/delete', ['id' => $brand->getId()]))
+                            ->confirm('Are you sure?')
+                            ->options([
+                                'class' => 'btn btn-link text-decoration-none text-danger',
+                            ])
+                            ->encode(false); ?>
+                    </b-dropdown-text>
                 </template>
 
                 <div class="card mb-4 shadow-sm" style="height: 180px;">
