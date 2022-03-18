@@ -27,7 +27,7 @@ class BrandChannel implements LoggableEntityInterface
     use LoggableEntityTrait;
 
     #[Column(type: 'primary')]
-    private ?int $id = null;
+    private int $id;
 
     #[Column(type: 'datetime')]
     private \DateTimeImmutable $createdAt;
@@ -36,9 +36,9 @@ class BrandChannel implements LoggableEntityInterface
     private ?\DateTimeImmutable $updatedAt = null;
 
     /**
-     * @return int|null
+     * @return int
      */
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }

@@ -44,7 +44,7 @@ class Brand implements RoutableEntityInterface, LoggableEntityInterface
     use LoggableEntityTrait;
 
     #[Column(type: 'primary')]
-    private ?int $id = null;
+    private int $id;
 
     #[Column(type: 'string(255)')]
     private string $name;
@@ -75,9 +75,9 @@ class Brand implements RoutableEntityInterface, LoggableEntityInterface
     }
 
     /**
-     * @return int|null
+     * @return int
      */
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }
