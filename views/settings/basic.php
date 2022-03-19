@@ -32,8 +32,7 @@ use Yiisoft\Yii\Widgets\ContentDecorator;
         <h3 class="h6">General Information</h3>
         <div class="mb-4"></div>
 
-        <?= $field->text($form, 'name')
-                ->autofocus(); ?>
+        <?= $field->text($form, 'name')->autofocus(); ?>
 
         <?= $field->textArea($form, 'description', ['rows()' => [5]])
                 ->class('form-control'); ?>

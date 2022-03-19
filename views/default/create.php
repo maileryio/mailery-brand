@@ -33,8 +33,7 @@ $this->setTitle('New Brand');
             ->id('brand-form')
             ->begin(); ?>
 
-        <?= $field->text($form, 'name')
-                ->autofocus(); ?>
+        <?= $field->text($form, 'name')->autofocus(); ?>
 
         <?= $field->textArea($form, 'description', ['rows()' => [5]])
                 ->class('form-control'); ?>
