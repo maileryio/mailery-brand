@@ -24,7 +24,7 @@ use Yiisoft\Yii\Widgets\ContentDecorator;
 <div class="row">
     <div class="col-12 col-xl-4">
         <?= Form::widget()
-                ->action($urlGenerator->generate('/brand/settings/basic'))
+                ->action($url->generate('/brand/settings/basic'))
                 ->csrf($csrf)
                 ->id('brand-form')
                 ->begin(); ?>

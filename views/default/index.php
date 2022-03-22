@@ -12,8 +12,7 @@ use Mailery\Widget\Link\Link;
 /** @var Mailery\Channel\Model\ChannelTypeList $channelTypeList /
 /** @var Yiisoft\Aliases\Aliases $aliases */
 /** @var Yiisoft\Translator\TranslatorInterface $translator */
-/** @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator */
-/** @var Yiisoft\Data\Reader\DataReaderInterface $dataReader*/
+/** @var Yiisoft\Router\UrlGeneratorInterface $url */
 /** @var Yiisoft\Yii\View\Csrf $csrf */
 
 $this->setTitle('My Brands');
@@ -22,7 +21,7 @@ $this->setTitle('My Brands');
     <div class="col-md-6 col-lg-4">
         <div class="card mb-4 shadow-sm" style="height: 180px;">
             <div class="card-body d-table p-0 h-100">
-                <a href="<?= $urlGenerator->generate('/brand/default/create'); ?>" class="btn btn-outline-light stretched-link  d-table-cell align-middle w-100 text-secondary">
+                <a href="<?= $url->generate('/brand/default/create'); ?>" class="btn btn-outline-light stretched-link  d-table-cell align-middle w-100 text-secondary">
                     <?= Icon::widget()->name('plus-circle')->options(['class' => 'h1']); ?>
                     <br />
                     Add new brand
@@ -33,8 +32,8 @@ $this->setTitle('My Brands');
     foreach ($dataReader->read() as $brand) {
         /* @var $brand Brand */
         $subscriberCounter = $subscriberCounter->withBrand($brand);
-        $settingsUrl = $urlGenerator->generate('/brand/settings/basic', ['brandId' => $brand->getId()]);
-        $dashboardUrl = $urlGenerator->generate('/dashboard/default/index', ['brandId' => $brand->getId()]); ?><div class="col-md-6 col-lg-4">
+        $settingsUrl = $url->generate('/brand/settings/basic', ['brandId' => $brand->getId()]);
+        $dashboardUrl = $url->generate('/dashboard/default/index', ['brandId' => $brand->getId()]); ?><div class="col-md-6 col-lg-4">
             <ui-brand-card>
                 <template v-slot:dropdown-button-content>
                     <?= Icon::widget()->name('chevron-down')->options(['class' => 'text-body h4']); ?>
@@ -52,7 +51,7 @@ $this->setTitle('My Brands');
                             ->csrf($csrf)
                             ->label('Delete brand')
                             ->method('delete')
-                            ->href($urlGenerator->generate('/brand/default/delete', ['id' => $brand->getId()]))
+                            ->href($url->generate('/brand/default/delete', ['id' => $brand->getId()]))
                             ->confirm('Are you sure?')
                             ->options([
                                 'class' => 'btn btn-link text-decoration-none text-danger',
