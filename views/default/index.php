@@ -76,15 +76,9 @@ $this->setTitle('My Brands');
                     <div class="card-body h-50 bg-light border-top">
                         <ul class="list-unstyled">
                             <?php
-                                $channelTypes = [];
-
-                                foreach ($brand->getChannels() as $channel) {
-                                    /** @var Channel $channel */
-                                    $channelType = $channelTypeList->findByEntity($channel);
-                                    if ($channelType) {
-                                        $channelTypes[] = $channelType;
-                                    }
-                                }
+                                $channelTypes = $brand->getChannels()
+                                    ->map(fn (Channel $channel) => $channelTypeList->findByEntity($channel))
+                                    ->toArray();
 
                                 foreach ($channelTypeList as $channelType) {
                                     /** @var ChannelTypeInterface $channelType */
