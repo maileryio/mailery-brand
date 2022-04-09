@@ -29,7 +29,7 @@ use Cycle\ORM\Entity\Behavior;
 #[Entity(
     table: 'brands',
     repository: BrandRepository::class,
-    mapper: LoggableMapper::class
+    mapper: LoggableMapper::class,
 )]
 #[Behavior\CreatedAt(
     field: 'createdAt',
