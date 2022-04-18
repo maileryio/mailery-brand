@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 
 use Mailery\Web\Widget\FlashMessage;
+use Mailery\Widget\Select\Select;
 use Yiisoft\Form\Widget\Form;
 use Yiisoft\Yii\Widgets\ContentDecorator;
 
@@ -40,6 +41,18 @@ use Yiisoft\Yii\Widgets\ContentDecorator;
         <div class="mb-5"></div>
         <h3 class="h6">Sending Setup</h3>
         <div class="mb-4"></div>
+
+        <?= $field->select($form, 'channels', ['items()' => [$form->getChannelListOptions()], 'multiple()' => [true]])
+                ->template(strtr(
+                    "{label}\n{input}\n{hint}\n{error}",
+                    [
+                        '{input}' => Select::widget()
+                            ->for($form, 'channels')
+                            ->items($form->getChannelListOptions())
+                            ->multiple(true)
+                            ->taggable(true),
+                    ]
+                )); ?>
 
         <?= $field->select($form, 'channels', ['items()' => [$form->getChannelListOptions()], 'multiple()' => [true]]); ?>
 

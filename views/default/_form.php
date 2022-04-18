@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 
 use Yiisoft\Form\Widget\Form;
+use Mailery\Widget\Select\Select;
 
 /** @var \Mailery\Brand\Form\BrandForm $form */
 /** @var Yiisoft\Form\Widget\Field $field */
@@ -15,12 +16,17 @@ use Yiisoft\Form\Widget\Form;
 
 <?= $field->text($form, 'name')->autofocus(); ?>
 
-<ui-multiselect
-    v-model="example5.value"
-    v-bind="example5"
-></ui-multiselect>
-
-<?= $field->select($form, 'channels', ['items()' => [$form->getChannelListOptions()], 'multiple()' => [true]]); ?>
+<?= $field->select($form, 'channels', ['items()' => [$form->getChannelListOptions()], 'multiple()' => [true]])
+        ->template(strtr(
+            "{label}\n{input}\n{hint}\n{error}",
+            [
+                '{input}' => Select::widget()
+                    ->for($form, 'channels')
+                    ->items($form->getChannelListOptions())
+                    ->multiple(true)
+                    ->taggable(true),
+            ]
+        )); ?>
 
 <?= $field->textArea($form, 'description', ['rows()' => [5]])
         ->class('form-control'); ?>
