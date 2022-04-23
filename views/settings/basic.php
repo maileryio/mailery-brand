@@ -42,19 +42,16 @@ use Yiisoft\Yii\Widgets\ContentDecorator;
         <h3 class="h6">Sending Setup</h3>
         <div class="mb-4"></div>
 
-        <?= $field->select($form, 'channels', ['items()' => [$form->getChannelListOptions()], 'multiple()' => [true]])
-                ->template(strtr(
-                    "{label}\n{input}\n{hint}\n{error}",
-                    [
-                        '{input}' => Select::widget()
-                            ->for($form, 'channels')
-                            ->items($form->getChannelListOptions())
-                            ->multiple(true)
-                            ->taggable(true),
-                    ]
-                )); ?>
-
-        <?= $field->select($form, 'channels', ['items()' => [$form->getChannelListOptions()], 'multiple()' => [true]]); ?>
+        <?= $field->select(
+                $form,
+                'channels',
+                [
+                    'class' => Select::class,
+                    'items()' => [$form->getChannelListOptions()],
+                    'multiple()' => [true],
+                    'taggable()' => [true],
+                ]
+            ); ?>
 
         <?= $field->submitButton()
                 ->class('btn btn-primary float-right mt-2')
