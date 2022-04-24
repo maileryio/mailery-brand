@@ -50,6 +50,7 @@ use Yiisoft\Yii\Widgets\ContentDecorator;
                     'items()' => [$form->getChannelListOptions()],
                     'multiple()' => [true],
                     'taggable()' => [true],
+                    'deselectFromDropdown()' => [true],
                 ]
             ); ?>
 

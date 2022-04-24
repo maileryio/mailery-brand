@@ -26,6 +26,7 @@
         "maileryio/mailery-web": "dev-master",
         "maileryio/widget-dataview": "dev-master",
         "maileryio/widget-link": "dev-master",
+        "maileryio/widget-select": "dev-master",
         "opis/closure": "^3.5"
     },
     "require-dev": {
