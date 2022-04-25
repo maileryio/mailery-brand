@@ -16,17 +16,17 @@ use Mailery\Widget\Select\Select;
 
 <?= $field->text($form, 'name')->autofocus(); ?>
 
-<?= $field->select($form, 'channels', ['items()' => [$form->getChannelListOptions()], 'multiple()' => [true]])
-        ->template(strtr(
-            "{label}\n{input}\n{hint}\n{error}",
-            [
-                '{input}' => Select::widget()
-                    ->for($form, 'channels')
-                    ->items($form->getChannelListOptions())
-                    ->multiple(true)
-                    ->taggable(true),
-            ]
-        )); ?>
+<?= $field->select(
+        $form,
+        'channels',
+        [
+            'class' => Select::class,
+            'items()' => [$form->getChannelListOptions()],
+            'multiple()' => [true],
+            'taggable()' => [true],
+            'deselectFromDropdown()' => [true],
+        ]
+    ); ?>
 
 <?= $field->textArea($form, 'description', ['rows()' => [5]])
         ->class('form-control'); ?>
