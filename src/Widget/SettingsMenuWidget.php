@@ -9,6 +9,12 @@ use Yiisoft\Router\CurrentRoute;
 
 class SettingsMenuWidget extends Widget
 {
+
+    /**
+     * @var array
+     */
+    private array $options = [];
+
     /**
      * @param CurrentRoute $currentRoute
      * @param SettingsMenu $settingsMenu
@@ -19,18 +25,29 @@ class SettingsMenuWidget extends Widget
     ) {}
 
     /**
+     * @param array $value
+     * @return self
+     */
+    public function options(array $value): self
+    {
+        $new = clone $this;
+        $new->options = $value;
+
+        return $new;
+    }
+
+    /**
      * @return string
      */
     protected function run(): string
     {
         return Nav::widget()
-            ->options([
-                'class' => 'nav nav-pills',
-            ])
+            ->options($this->options)
             ->currentPath(
                 $this->currentRoute->getUri()->getPath()
             )
             ->items($this->settingsMenu->getItems())
             ->render();
     }
+
 }
