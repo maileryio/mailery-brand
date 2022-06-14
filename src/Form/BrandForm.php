@@ -85,8 +85,6 @@ class BrandForm extends FormModel
 
         if (isset($data[$scope]['channels'])) {
             $data[$scope]['channels'] = array_filter((array) $data[$scope]['channels']);
-        } else {
-            $data[$scope]['channels'] = [];
         }
 
         return parent::load($data, $formName);
