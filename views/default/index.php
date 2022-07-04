@@ -53,6 +53,12 @@ $this->setTitle('My Brands');
                             ->method('delete')
                             ->href($url->generate('/brand/default/delete', ['id' => $brand->getId()]))
                             ->confirm('Are you sure?')
+                            ->afterRequest(<<<JS
+                                (res) => {
+                                    res.redirected && res.url && (window.location.href = res.url);
+                                }
+                                JS
+                            )
                             ->options([
                                 'class' => 'btn btn-link text-decoration-none text-danger',
                             ])
