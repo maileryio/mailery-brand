@@ -10,10 +10,12 @@ declare(strict_types=1);
  * @copyright Copyright (c) 2020, Mailery (https://mailery.io/)
  */
 
-use Yiisoft\Router\UrlGeneratorInterface;
 use Mailery\Brand\Entity\Brand;
 use Mailery\Brand\Entity\BrandChannel;
+use Mailery\Brand\ViewInjection\BrandLocatorViewInjection;
 use Yiisoft\Definitions\DynamicReference;
+use Yiisoft\Router\UrlGeneratorInterface;
+use Yiisoft\Definitions\Reference;
 
 return [
     'yiisoft/yii-cycle' => [
@@ -76,6 +78,12 @@ return [
                     },
                 ],
             ],
+        ],
+    ],
+
+    'yiisoft/yii-view' => [
+        'injections' => [
+            Reference::to(BrandLocatorViewInjection::class),
         ],
     ],
 ];
