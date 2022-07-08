@@ -12,9 +12,9 @@ declare(strict_types=1);
 
 namespace Mailery\Brand;
 
-use Cycle\ORM\ORMInterface;
 use Mailery\Brand\Entity\Brand;
 use Mailery\Brand\Exception\BrandRequiredException;
+use Mailery\Brand\Repository\BrandRepository;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 class BrandLocator implements BrandLocatorInterface
@@ -30,10 +30,10 @@ class BrandLocator implements BrandLocatorInterface
     private ?Brand $brand = null;
 
     /**
-     * @param ORMInterface $orm
+     * @param BrandRepository $brandRepo
      */
     public function __construct(
-        private ORMInterface $orm
+        private BrandRepository $brandRepo
     ) {}
 
     /**
@@ -71,14 +71,12 @@ class BrandLocator implements BrandLocatorInterface
         $path = $uri->getPath();
 
         $brandId = null;
-        $brandRepo = $this->orm->getRepository(Brand::class);
-
         if ($this->regexp !== null && preg_match($this->regexp, $path, $matches) && !empty($matches['brandId'])) {
             $brandId = (int) $matches['brandId'];
         }
 
         if ($brandId !== null) {
-            $this->brand = $brandRepo->findByPk($brandId);
+            $this->brand = $this->brandRepo->findByPk($brandId);
         }
     }
 

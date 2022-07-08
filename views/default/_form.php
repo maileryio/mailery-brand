@@ -1,38 +1,37 @@
 <?php declare(strict_types=1);
 
-use Yiisoft\Form\Widget\Form;
 use Mailery\Widget\Select\Select;
+use Yiisoft\Form\Field;
+use Yiisoft\Html\Tag\Form;
 
 /** @var Mailery\Brand\Form\BrandForm $form */
-/** @var Yiisoft\Form\Widget\Field $field */
 /** @var Yiisoft\Yii\WebView $this */
 /** @var Yiisoft\Yii\View\Csrf $csrf */
 
 ?>
-<?= Form::widget()
+<?= Form::tag()
         ->csrf($csrf)
         ->id('brand-form')
-        ->begin(); ?>
+        ->post()
+        ->open(); ?>
 
-<?= $field->text($form, 'name')->autofocus(); ?>
+<?= Field::text($form, 'name')->autofocus(); ?>
 
-<?= $field->select(
+<?= Field::input(
+        Select::class,
         $form,
         'channels',
         [
-            'class' => Select::class,
-            'items()' => [$form->getChannelListOptions()],
+            'optionsData()' => [$form->getChannelListOptions()],
             'multiple()' => [true],
             'taggable()' => [true],
             'deselectFromDropdown()' => [true],
         ]
     ); ?>
 
-<?= $field->textArea($form, 'description', ['rows()' => [5]])
-        ->class('form-control'); ?>
+<?= Field::textarea($form, 'description', ['rows()' => [5]]); ?>
 
-<?= $field->submitButton()
-        ->class('btn btn-primary float-right mt-2')
-        ->value('Add brand'); ?>
+<?= Field::submitButton()
+        ->content('Add brand'); ?>
 
-<?= Form::end(); ?>
+<?= Form::tag()->close(); ?>

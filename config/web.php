@@ -13,6 +13,7 @@ declare(strict_types=1);
 use Cycle\ORM\ORMInterface;
 use Mailery\Brand\BrandLocator;
 use Mailery\Brand\BrandLocatorInterface;
+use Mailery\Brand\Repository\BrandRepository;
 use Psr\Container\ContainerInterface;
 use Mailery\Menu\Menu;
 use Mailery\Menu\Decorator\Normalizer;
@@ -29,9 +30,9 @@ return [
     ],
     BrandLocatorInterface::class => BrandLocator::class,
     BrandLocator::class => function (ContainerInterface $container) {
-        $orm = $container->get(ORMInterface::class);
+        $repo = $container->get(BrandRepository::class);
 
-        return (new BrandLocator($orm))
+        return (new BrandLocator($repo))
             ->withRegexp('/^\/brand\/(?<brandId>\d+)\/?/');
     },
     SettingsMenu::class => static function (Injector $injector) use($params) {

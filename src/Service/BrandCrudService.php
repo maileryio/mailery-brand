@@ -2,7 +2,7 @@
 
 namespace Mailery\Brand\Service;
 
-use Cycle\ORM\ORMInterface;
+use Cycle\ORM\EntityManagerInterface;
 use Mailery\Brand\Entity\Brand;
 use Mailery\Brand\ValueObject\BrandValueObject;
 use Yiisoft\Yii\Cycle\Data\Writer\EntityWriter;
@@ -10,10 +10,10 @@ use Yiisoft\Yii\Cycle\Data\Writer\EntityWriter;
 class BrandCrudService
 {
     /**
-     * @param ORMInterface $orm
+     * @param EntityManagerInterface $entityManager
      */
     public function __construct(
-        private ORMInterface $orm
+        private EntityManagerInterface $entityManager
     ) {}
 
     /**
@@ -31,7 +31,7 @@ class BrandCrudService
             $brand->getChannels()->add($channel);
         }
 
-        (new EntityWriter($this->orm))->write([$brand]);
+        (new EntityWriter($this->entityManager))->write([$brand]);
 
         return $brand;
     }
@@ -56,7 +56,7 @@ class BrandCrudService
             $brand->getChannels()->add($channel);
         }
 
-        (new EntityWriter($this->orm))->write([$brand]);
+        (new EntityWriter($this->entityManager))->write([$brand]);
 
         return $brand;
     }
@@ -67,6 +67,6 @@ class BrandCrudService
      */
     public function delete(Brand $brand): void
     {
-        (new EntityWriter($this->orm))->delete([$brand]);
+        (new EntityWriter($this->entityManager))->delete([$brand]);
     }
 }
