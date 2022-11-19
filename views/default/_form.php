@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 
 use Mailery\Widget\Select\Select;
+use Mailery\Web\Vue\Directive;
 use Yiisoft\Form\Field;
 use Yiisoft\Html\Tag\Form;
 
@@ -29,7 +30,7 @@ use Yiisoft\Html\Tag\Form;
         ]
     ); ?>
 
-<?= Field::textarea($form, 'description', ['rows()' => [5]]); ?>
+<?= Directive::pre(Field::textarea($form, 'description', ['rows()' => [5]])); ?>
 
 <?= Field::submitButton()
         ->content('Add brand'); ?>

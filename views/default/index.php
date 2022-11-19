@@ -6,6 +6,7 @@ use Mailery\Channel\Model\ChannelTypeInterface;
 use Mailery\Brand\Entity\Brand;
 use Mailery\Icon\Icon;
 use Mailery\Widget\Link\Link;
+use Mailery\Web\Vue\Directive;
 
 /** @var Yiisoft\Yii\WebView $this */
 /** @var Mailery\Subscriber\Counter\SubscriberCounter $subscriberCounter /
@@ -71,12 +72,12 @@ $this->setTitle('My Brands');
                         <h5 class="card-title d-flex">
                             <?php $title = $translator->translate('{totalCount, number} {totalCount, plural, one{subscriber} other{subscribers}}', ['totalCount' => $subscriberCounter->getTotalCount()]); ?>
                             <a href="<?= $dashboardUrl; ?>" title="<?= $title; ?>" class="text-decoration-none text-truncate text-body stretched-link">
-                                <?= $brand->getName(); ?>
+                                <?= Directive::pre($brand->getName()); ?>
                             </a>
                             <span class="badge badge-primary ml-2 mr-2"><?= $subscriberCounter->getTotalCount(); ?></span>
                         </h5>
-                        <p class="card-text text-muted text-truncate" title="<?= $brand->getDescription() . $brand->getDescription() . $brand->getDescription(); ?>">
-                            <?= $brand->getDescription(); ?>
+                        <p class="card-text text-muted text-truncate">
+                            <?= Directive::pre($brand->getDescription()); ?>
                         </p>
                     </div>
                     <div class="card-body h-50 bg-light border-top">

@@ -5,6 +5,7 @@ use Mailery\Widget\Select\Select;
 use Yiisoft\Html\Tag\Form;
 use Yiisoft\Yii\Widgets\ContentDecorator;
 use Yiisoft\Form\Field;
+use Mailery\Web\Vue\Directive;
 
 /** @var Yiisoft\Yii\WebView $this */
 /** @var Yiisoft\Form\FormModelInterface $form */
@@ -35,7 +36,7 @@ use Yiisoft\Form\Field;
 
         <?= Field::text($form, 'name')->autofocus(); ?>
 
-        <?= Field::textarea($form, 'description', ['rows()' => [5]]); ?>
+        <?= Directive::pre(Field::textarea($form, 'description', ['rows()' => [5]])); ?>
 
         <div class="mb-4"></div>
         <h6 class="font-weight-bold">Sending Setup</h6>
